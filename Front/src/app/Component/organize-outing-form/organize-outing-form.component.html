@@ -1,0 +1,31 @@
+<div class="p-6">
+  <h2 class="text-xl font-semibold mb-4">Organiser une sortie</h2>
+
+  <form (ngSubmit)="onSubmit()" #outingForm="ngForm" class="flex flex-col gap-4">
+    <div>
+      <label for="title" class="block mb-2">Titre de la sortie</label>
+      <input type="text" id="title" name="title" class="border rounded px-2 py-1 w-full"
+             [(ngModel)]="outing.title" required />
+    </div>
+
+    <div>
+      <label for="date" class="block mb-2">Date</label>
+      <input type="date" id="date" name="date" class="border rounded px-2 py-1 w-full"
+             [(ngModel)]="outing.date" required />
+    </div>
+
+    <div>
+      <label for="visibility" class="block mb-2">Visibilité</label>
+      <select id="visibility" name="visibility" class="border rounded px-2 py-1 w-full"
+              [(ngModel)]="outing.visibility" required>
+        <option value="PUBLIC">Publique</option>
+        <option value="PRIVATE">Privée</option>
+      </select>
+    </div>
+
+    <div class="flex justify-end gap-4 mt-4">
+      <button type="button" class="px-4 py-2 bg-gray-300 rounded" (click)="close()">Annuler</button>
+      <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded" [disabled]="!outingForm.valid">Organiser</button>
+    </div>
+  </form>
+</div>

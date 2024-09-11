@@ -1,0 +1,163 @@
+<div class="flex flex-col md:flex-row bg h-full w-full border-r-4 md:pb-16 bg-white ">
+  <!-- Bouton du Menu Burger (Visible uniquement en mobile) -->
+  <div class="flex items-center justify-between px-4 py-2 md:hidden">
+    <a href="#" class="text-lg font-semibold tracking-widest text-gray-900 uppercase dark:text-white">Filtres</a>
+    <button class="rounded-lg focus:outline-none focus:shadow-outline" (click)="toggleMenu()">
+      <svg *ngIf="!isMenuOpen" fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+        <path fill-rule="evenodd" d="M3 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2z" clip-rule="evenodd"></path>
+      </svg>
+      <svg *ngIf="isMenuOpen" fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+        <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Menu Burger & Filtres -->
+  <div
+    class="fixed inset-0 z-50 bg-white dark:bg-gray-800 md:static md:bg-transparent md:dark:bg-transparent flex flex-col w-64 text-gray-700 dark:text-gray-200 flex-shrink-0 transform transition-transform duration-300"
+    [ngClass]="{
+      'translate-x-0': isMenuOpen,
+      '-translate-x-full': !isMenuOpen,
+      'md:translate-x-0': true
+    }"
+  >
+    <div class="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between md:justify-start ">
+      <a href="#" class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">Filtres</a>
+      <button class="rounded-lg md:hidden focus:outline-none focus:shadow-outline" (click)="toggleMenu()">
+        <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
+          <path *ngIf="!isMenuOpen" fill-rule="evenodd" d="M3 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2z" clip-rule="evenodd"></path>
+          <path *ngIf="isMenuOpen" fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
+      </button>
+    </div>
+
+    <!-- Formulaire pour les filtres -->
+    <form class="flex-grow px-4 pb-4 md:pb-0 md:overflow-y-auto">
+
+      <!-- Champ de recherche par titre -->
+      <div class="mt-4">
+        <label for="location-search" class=" block text-sm font-medium text-gray-700 ">Recherche par nom</label>
+        <input
+          autocomplete="off"
+          id="keyword-search"
+          type="text"
+          [(ngModel)]="title"
+          name="keyword"
+          placeholder="Rechercher..."
+          class="text-gray-700 mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Champ de recherche pour Localisation -->
+      <div class="mt-4">
+        <label for="location-search" class=" block text-sm font-medium text-gray-700 ">Localisation</label>
+        <input
+          autocomplete="off"
+          id="location-search"
+          type="text"
+          (ngModelChange)="submitSearchCity($event)"
+          [(ngModel)]="location"
+          name="location"
+          placeholder="Rechercher une ville"
+          class="text-gray-700 mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+
+        <!-- Menu déroulant pour les suggestions -->
+        @if(displayCityArray){
+          <ul *ngIf="displayCityArray.length > 0" class="absolute left-0 right-0 border text-gray-700 border-gray-300 rounded-md shadow-lg mt-1 bg-white z-10 max-h-60 overflow-y-auto">
+            <li
+              *ngFor="let city of displayCityArray"
+              (click)="selectCity(city)"
+              class="px-3 py-2 cursor-pointer hover:bg-indigo-100"
+            >
+              {{ city }}
+            </li>
+          </ul>
+        }
+      </div>
+
+      <!-- Champ de recherche pour Mot clés -->
+
+      <div class="mt-4 relative">
+        <label for="category-search" class="block text-sm font-medium text-gray-700">Recherche par mot clés</label>
+        <input
+          autocomplete="off"
+          id="category-search"
+          type="text"
+          (ngModelChange)="submitSearchKeyword($event)"
+          [(ngModel)]="keyword"
+          name="category"
+          placeholder="Rechercher une catégorie"
+          class="text-gray-700 mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+
+        <!-- Menu déroulant pour les suggestions -->
+        @if(displayKeywordArray){
+          <ul *ngIf="displayKeywordArray.length > 0" class="absolute left-0 right-0 border text-gray-700 border-gray-300 rounded-md shadow-lg mt-1 bg-white z-10 max-h-60 overflow-y-auto">
+            <li
+              *ngFor="let kw of displayKeywordArray"
+              (click)="selectKeyword(kw)"
+              class="px-3 py-2 cursor-pointer hover:bg-indigo-100"
+            >
+              {{ kw }}
+            </li>
+          </ul>
+        }
+
+      </div>
+
+
+
+      <!-- Champ de recherche pour start date  -->
+      <div class="mt-4">
+        <label for="start-date" class=" block text-sm font-medium text-gray-700 ">Commence entre le</label>
+        <input
+          id="start-date"
+          type="date"
+          [(ngModel)]="startDate"
+          name="startDate"
+          class="text-gray-700 mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+
+      <!-- Champ de recherche pour end date  -->
+      <div class="mt-4">
+        <label for="end-date" class=" block text-sm font-medium text-gray-700 ">Et le</label>
+        <input
+          id="end-date"
+          type="date"
+          [(ngModel)]="endDate"
+          name="endDate"
+          class="text-gray-700 mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        />
+      </div>
+
+
+
+      <!-- Bouton de soumission -->
+      <div class="container mt-2 px-8 ">
+
+        <button type="submit" class="button overflow-hidden type--A" (click)="submitFilterMenu()">
+          <div class="button__line"></div>
+          <div class="button__line"></div>
+          <span class="button__text">ENTRY</span>
+          <div class="button__drow1"></div>
+          <div class="button__drow2"></div>
+        </button>
+      </div>
+
+      @if(errorMsg !== ""){
+        <p [ngClass]="{'text-red-500 mt-2 text-md shake': true}">
+          {{errorMsg}}
+        </p>
+      }
+    </form>
+  </div>
+
+  <!-- Overlay pour le Menu (visible uniquement en mobile) -->
+  <div
+    class="fixed inset-0 z-40 bg-black opacity-50 md:hidden"
+    *ngIf="isMenuOpen"
+    (click)="closeMenu()"
+  ></div>
+</div>

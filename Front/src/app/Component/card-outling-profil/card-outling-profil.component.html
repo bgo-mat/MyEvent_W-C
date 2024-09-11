@@ -1,0 +1,13 @@
+<div class="flex flex-col sm:flex-row items-center bg-gray-100 p-4 rounded-lg shadow-sm">
+  <div class="bg-gray-300 h-16 w-16 flex items-center justify-center mb-4 sm:mb-0 sm:mr-4 rounded">
+   <img src="{{eventImage}}" class="w-full h-full object-cover">
+  </div>
+  <div class="flex-1 text-center sm:text-left">
+    <p class="text-lg font-semibold">{{outlingInfo.title}}</p>
+    <p class="text-gray-500">Sortie créé par : {{outlingInfo.organizer.name}}</p>
+    <p class="text-gray-500">Prévue le : {{outlingInfo.createdAt | date : 'short'}}</p>
+  </div>
+  <button (click)="redirectOutling()" class="mt-4 sm:mt-0 sm:ml-auto bg-bluePimp text-white px-4 py-2 rounded-lg hover:scale-105 transition-transform">
+    En savoir +
+  </button>
+</div>

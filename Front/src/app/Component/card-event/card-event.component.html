@@ -1,0 +1,34 @@
+<div *ngIf="result.image" class="flex flex-col md:flex-row h-auto md:h-56 border rounded-lg overflow-hidden w-full md:w-11/12">
+  <div class="flex-shrink-0 w-full md:w-auto">
+    <img class="h-56 w-full md:w-40 object-cover" src="{{ result.image }}" alt="Event image"/>
+  </div>
+  <div class="p-4 flex flex-col justify-between w-full md:w-full">
+    <div class="flex justify-between mt-4 md:mt-0 h-auto md:h-2/6" >
+      <h1 class="text-lg md:text-xl font-bold truncate md:whitespace-normal h-full">
+        {{ result.title_fr }}
+      </h1>
+      <a href="javascript:void(0);" class="text-blue-500 hover:text-blue-500 font-semibold" (click)="redirectEventDetail(result.uid)">En savoir +</a></div>
+    <div class="h-auto md:h-full flex flex-col gap-3">
+      <p class="text-sm md:text-base  text-justify h-auto md:h-2/6 overflow-hidden text-ellipsis md:whitespace-normal" style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
+        {{ result.description_fr }}
+      </p>
+
+        <div class="md:h-1/6 items-center w-full flex flex-row gap-1">
+          @if(result.location_city !==  null){
+          <img class="w-5" src="assets/location-sign-svgrepo-com.svg">
+          <p class="text-xs md:text-sm text-justify h-auto overflow-hidden text-ellipsis md:whitespace-normal">{{ result.location_city }}</p>
+          }
+        </div>
+
+
+      <div *ngIf="result.keywords_fr"  class="flex flex-wrap overflow-hidden h-1/6">
+        <div *ngFor="let keyword of result.keywords_fr.slice(0, 10)"
+             class="flex justify-center items-center m-1 font-medium py-1 px-3 rounded-sm bg-pink text-black ">
+          @if (keyword && keyword.trim() !== ''){
+            <div class="text-sm font-normal leading-none max-w-full flex-initial">{{ keyword }}</div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

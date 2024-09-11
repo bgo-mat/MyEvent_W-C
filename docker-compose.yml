@@ -1,0 +1,41 @@
+version: '3.8'
+services:
+  backend:
+    build:
+      context: ./Back/event
+      dockerfile: Dockerfile_Back
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/event
+      SPRING_DATASOURCE_USERNAME: matthias
+      SPRING_DATASOURCE_PASSWORD: Lavieestbelle!44
+    networks:
+      - mynetwork
+
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_DB: event
+      POSTGRES_USER: matthias
+      POSTGRES_PASSWORD: Lavieestbelle!44
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+
+
+  frontend:
+    build:
+      context: ./Front
+      dockerfile: Dockerfile_Front
+    ports:
+      - "4200:80"
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge

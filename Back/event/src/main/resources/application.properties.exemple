@@ -1,0 +1,39 @@
+# Configuration de la source de donn�es
+spring.datasource.url=
+spring.datasource.username=
+spring.datasource.password=
+
+# Param�tres JPA/Hibernate
+spring.jpa.hibernate.ddl-auto=
+spring.jpa.show-sql=
+spring.jpa.properties.hibernate.dialect=
+
+# Options suppl�mentaires (facultatif)
+spring.datasource.driver-class-name=org.postgresql.Driver
+
+# Configuration Google OAuth2
+spring.security.oauth2.client.registration.google.client-id=
+spring.security.oauth2.client.registration.google.client-secret=
+spring.security.oauth2.client.registration.google.scope=
+spring.security.oauth2.client.registration.google.redirect-uri=
+spring.security.oauth2.client.registration.google.client-name=
+
+# URL pour r�cup�rer les informations de l'utilisateur Google
+spring.security.oauth2.client.provider.google.authorization-uri=
+spring.security.oauth2.client.provider.google.token-uri=
+spring.security.oauth2.client.provider.google.user-info-uri=
+spring.security.oauth2.client.provider.google.user-name-attribute=
+
+# OAuth2 Configuration for Discord
+spring.security.oauth2.client.registration.discord.client-id=
+spring.security.oauth2.client.registration.discord.client-secret=
+spring.security.oauth2.client.registration.discord.scope=
+spring.security.oauth2.client.registration.discord.redirect-uri=
+spring.security.oauth2.client.registration.discord.client-name=
+spring.security.oauth2.client.registration.discord.authorization-grant-type=
+
+# URLs for Discord OAuth2
+spring.security.oauth2.client.provider.discord.authorization-uri=
+spring.security.oauth2.client.provider.discord.token-uri=
+spring.security.oauth2.client.provider.discord.user-info-uri=
+spring.security.oauth2.client.provider.discord.user-name-attribute=
