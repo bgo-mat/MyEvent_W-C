@@ -29,8 +29,7 @@
           <p class="text-xs md:text-sm text-justify h-auto overflow-hidden text-ellipsis md:whitespace-normal">{{ result.location_city }}</p>
           }
         </div>
-
-
+      
       <div *ngIf="result.keywords_fr"  class="flex flex-wrap overflow-hidden h-1/6">
         <div *ngFor="let keyword of result.keywords_fr.slice(0, 10)"
              class="flex justify-center items-center m-1 font-medium py-1 px-3 rounded-sm bg-pink text-black ">
