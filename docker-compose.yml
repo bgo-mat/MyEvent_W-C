@@ -3,7 +3,7 @@ services:
   backend:
     build:
       context: ./Back/event
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_Back
     ports:
       - "8080:8080"
     depends_on:
@@ -30,7 +30,7 @@ services:
   frontend:
     build:
       context: ./Front
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_Front
     ports:
       - "4200:80"
     networks:
