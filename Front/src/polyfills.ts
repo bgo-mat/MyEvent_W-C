@@ -1,3 +1,9 @@
+
+import { Buffer } from 'buffer';
+// @ts-ignore
+import process from 'process/browser';
+
 (window as any).global = window;
-(window as any).process = require('process/browser');
-(window as any).Buffer = require('buffer').Buffer;
+(window as any).process = process;
+(window as any).Buffer = Buffer;
+

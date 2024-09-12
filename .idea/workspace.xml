@@ -5,10 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2e0af264-f3d5-404e-a71c-d42b0df8b76c" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front/package-lock.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/Front/package.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/card-sortie/card-sortie.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/card-sortie/card-sortie.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/polyfills.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
