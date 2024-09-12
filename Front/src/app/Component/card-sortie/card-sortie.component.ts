@@ -4,8 +4,7 @@ import { OutlingService } from '../../Service/Fonction-service/outling-service/o
 import { AuthService } from '../../Service/Fonction-service/auth-service/auth.service';
 import { NgClass } from '@angular/common';
 import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
-
+import { Client } from '@stomp/stompjs'; // Utiliser @stomp/stompjs
 
 @Component({
   selector: 'app-card-sortie',
@@ -23,7 +22,7 @@ export class CardSortieComponent implements OnInit {
   public isVisible = false;
   public actualUser: any;
   public participantsArray: any[] = [];
-  public stompClient: any;
+  public stompClient: Client | null = null; // Changer le type de stompClient pour correspondre à la classe Client
   public messageContent: string = '';
 
   constructor(private router: Router, private outlingService: OutlingService, private authService: AuthService) {}
@@ -68,18 +67,27 @@ export class CardSortieComponent implements OnInit {
 
   connectToSocket(outingId: string): void {
     const socket = new SockJS('http://localhost:8080/ws');
-    this.stompClient = Stomp.over(socket);
+    this.stompClient = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => console.log(str), // Pour déboguer les connexions
+      reconnectDelay: 5000,
+    });
 
-    this.stompClient.connect({}, (frame: any) => {
-      this.stompClient.subscribe(`/topic/${outingId}`, (message: any) => {
+    this.stompClient.onConnect = (frame) => {
+      this.stompClient?.subscribe(`/topic/${outingId}`, (message) => {
         this.onMessageReceived(JSON.parse(message.body));
       });
 
-      this.stompClient.send(`/app/chat.addUser/${outingId}`, {}, JSON.stringify({
-        sender: this.userConnectName,
-        type: 'JOIN'
-      }));
-    });
+      this.stompClient?.publish({
+        destination: `/app/chat.addUser/${outingId}`,
+        body: JSON.stringify({
+          sender: this.userConnectName,
+          type: 'JOIN'
+        }),
+      });
+    };
+
+    this.stompClient.activate();
   }
 
   onMessageReceived(message: any) {
@@ -92,7 +100,10 @@ export class CardSortieComponent implements OnInit {
       sender: this.userConnectName,
       outingId: outingId
     };
-    this.stompClient.send(`/app/chat.sendMessage/${outingId}`, {}, JSON.stringify(message));
+    this.stompClient?.publish({
+      destination: `/app/chat.sendMessage/${outingId}`,
+      body: JSON.stringify(message),
+    });
   }
 
   goToOutingDetail(outingId: string) {
