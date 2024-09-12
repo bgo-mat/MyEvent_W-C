@@ -7,7 +7,7 @@ import { OrganizeOutingFormComponent } from "../../Component/organize-outing-for
 import { OutlingService } from "../../Service/Fonction-service/outling-service/outling.service";
 import { CardSortieComponent } from "../../Component/card-sortie/card-sortie.component";
 import {AuthService} from "../../Service/Fonction-service/auth-service/auth.service";
-import {FormsModule} from "@angular/forms"; // Import CardSortieComponent
+import {FormsModule} from "@angular/forms"; 
 
 @Component({
   selector: 'app-detail-event',
