@@ -12,14 +12,14 @@ export class WsChatService {
 
   constructor() {
     this.stompClient = new Client({
-      brokerURL: 'ws://localhost:8080/ws',
+      brokerURL: 'ws://http://51.75.162.147:4200:8080/ws',
       reconnectDelay: 5000,
       heartbeatIncoming: 4000,
       heartbeatOutgoing: 4000,
     });
 
     this.stompClient.webSocketFactory = () => {
-      return new SockJS('http://localhost:8080/ws');
+      return new SockJS('http://http://51.75.162.147:4200:8080/ws');
     };
   }
 
