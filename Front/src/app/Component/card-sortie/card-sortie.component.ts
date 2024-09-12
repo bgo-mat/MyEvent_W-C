@@ -1,30 +1,30 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import {OutlingService} from "../../Service/Fonction-service/outling-service/outling.service";
-import {AuthService} from "../../Service/Fonction-service/auth-service/auth.service";
-import {NgClass} from "@angular/common";
+import { OutlingService } from '../../Service/Fonction-service/outling-service/outling.service';
+import { AuthService } from '../../Service/Fonction-service/auth-service/auth.service';
+import { NgClass } from '@angular/common';
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+
 
 @Component({
   selector: 'app-card-sortie',
   templateUrl: './card-sortie.component.html',
   styleUrl: './card-sortie.component.css',
-  imports: [
-    NgClass
-  ],
+  imports: [NgClass],
   standalone: true
 })
-
 export class CardSortieComponent implements OnInit {
   @Input() sortie: any;
   public userConnectName: string | undefined;
   public isOrganizer: boolean = false;
   public isParticipant: boolean = false;
-  public errorMsg:any = "";
+  public errorMsg: any = '';
   public isVisible = false;
-  public actualUser:any;
-
-  // Liste des tableaux de participants
-  participantsArray: any[] = [];
+  public actualUser: any;
+  public participantsArray: any[] = [];
+  public stompClient: any;
+  public messageContent: string = '';
 
   constructor(private router: Router, private outlingService: OutlingService, private authService: AuthService) {}
 
@@ -33,15 +33,11 @@ export class CardSortieComponent implements OnInit {
     this.getAllParticipants();
   }
 
-  // Récupérer l'utilisateur connecté et vérifier s'il est l'organisateur de la sortie
   getCurrentUser() {
     this.authService.getCurrentUser().subscribe(
       data => {
-        console.log('Utilisateur connecté:', data);
         this.userConnectName = data.username;
         this.actualUser = data;
-
-        // Vérification si l'utilisateur connecté est l'organisateur de la sortie
         if (this.userConnectName === this.sortie.organizer.name) {
           this.isOrganizer = true;
         }
@@ -52,11 +48,9 @@ export class CardSortieComponent implements OnInit {
     );
   }
 
-  // Récupérer tous les participants de la sortie
   getAllParticipants() {
     this.outlingService.getParticipantsByOutingId(this.sortie.id).subscribe({
       next: (data) => {
-        console.log('Liste des participants:', data);
         this.participantsArray.push(data.body);
         this.checkIfUserIsParticipant();
       },
@@ -66,29 +60,49 @@ export class CardSortieComponent implements OnInit {
     });
   }
 
- // Vérifier si l'utilisateur connecté est un participant
   checkIfUserIsParticipant() {
     let allParticipants = [].concat(...this.participantsArray);
     // @ts-ignore
     this.isParticipant = allParticipants.some(participant => participant.name === this.userConnectName);
-    console.log('Est-ce que l\'utilisateur est participant ?', this.isParticipant);
   }
 
+  connectToSocket(outingId: string): void {
+    const socket = new SockJS('http://localhost:8080/ws');
+    this.stompClient = Stomp.over(socket);
 
+    this.stompClient.connect({}, (frame: any) => {
+      this.stompClient.subscribe(`/topic/${outingId}`, (message: any) => {
+        this.onMessageReceived(JSON.parse(message.body));
+      });
 
+      this.stompClient.send(`/app/chat.addUser/${outingId}`, {}, JSON.stringify({
+        sender: this.userConnectName,
+        type: 'JOIN'
+      }));
+    });
+  }
 
-  // Rejoindre la sortie
+  onMessageReceived(message: any) {
+    console.log('Message reçu : ', message);
+  }
+
+  sendMessageToChannel(outingId: string, content: string) {
+    const message = {
+      content: content,
+      sender: this.userConnectName,
+      outingId: outingId
+    };
+    this.stompClient.send(`/app/chat.sendMessage/${outingId}`, {}, JSON.stringify(message));
+  }
+
   goToOutingDetail(outingId: string) {
-
-    if(!this.actualUser){
-
-      this.errorMsg = "Veuillez vous inscrire ou vous connecter pour rejoindre une sortie"
+    if (!this.actualUser) {
+      this.errorMsg = "Veuillez vous inscrire ou vous connecter pour rejoindre une sortie";
       this.openPopup();
-    }else {
-
+    } else {
       this.outlingService.joinOuting(outingId).subscribe({
         next: (response) => {
-          alert('Vous avez rejoint la sortie avec succès !');
+          this.connectToSocket(outingId);
           this.router.navigate([`/outing`, outingId, this.sortie.eventExternalId]);
         },
         error: (err) => {
@@ -96,9 +110,7 @@ export class CardSortieComponent implements OnInit {
           this.router.navigate([`/outing`, outingId, this.sortie.eventExternalId]);
         }
       });
-
     }
-
   }
 
   openPopup() {
@@ -109,7 +121,7 @@ export class CardSortieComponent implements OnInit {
     this.isVisible = false;
   }
 
-  redirectLog(){
-    this.router.navigate(['/login'])
+  redirectLog() {
+    this.router.navigate(['/login']);
   }
 }

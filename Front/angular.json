@@ -17,7 +17,8 @@
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "src/polyfills.ts"
             ],
             "tsConfig": "tsconfig.app.json",
             "assets": [
@@ -28,6 +29,7 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.css"
             ],
+            "allowedCommonJsDependencies": ["stompjs", "sockjs-client"],
             "scripts": []
           },
           "configurations": {

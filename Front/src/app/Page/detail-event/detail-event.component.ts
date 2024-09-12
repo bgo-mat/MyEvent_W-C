@@ -7,7 +7,7 @@ import { OrganizeOutingFormComponent } from "../../Component/organize-outing-for
 import { OutlingService } from "../../Service/Fonction-service/outling-service/outling.service";
 import { CardSortieComponent } from "../../Component/card-sortie/card-sortie.component";
 import {AuthService} from "../../Service/Fonction-service/auth-service/auth.service";
-import {FormsModule} from "@angular/forms"; 
+import {FormsModule} from "@angular/forms"; // Import CardSortieComponent
 
 @Component({
   selector: 'app-detail-event',
@@ -91,14 +91,17 @@ export class DetailEventComponent implements OnInit {
   getEventFromEvent() {
     this.outling.getOutlingById(this.eventId).subscribe(
       data => {
+        console.log(data);
         this.outings = data.body || [];
-        console.log(this.outings)
+        console.log(this.outings);
       },
       error => {
         console.error("Erreur lors de la récupération des sorties : ", error);
+        console.log("Texte brut de l'erreur : ", error.error.text);
       }
     );
   }
+
 
   getEventWithUid() {
     this.openAgendaService.getComponentById(this.eventId).subscribe(

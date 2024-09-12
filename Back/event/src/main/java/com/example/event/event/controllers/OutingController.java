@@ -40,8 +40,12 @@ public class OutingController {
     }
 
     @GetMapping("/event/{eventExternalId}")
-    public List<Outing> getOutingsByEventExternalId(@PathVariable Long eventExternalId) {
-        return outingService.getOutingsByEventExternalId(eventExternalId);
+    public ResponseEntity<List<Outing>> getOutingsByEventExternalId(@PathVariable Long eventExternalId) {
+        List<Outing> outings = outingService.getOutingsByEventExternalId(eventExternalId);
+        if (outings.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(outings, HttpStatus.OK);
     }
 
     @PostMapping("/{id}/join")

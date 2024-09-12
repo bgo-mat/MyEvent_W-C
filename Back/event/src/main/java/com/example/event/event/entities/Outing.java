@@ -1,7 +1,9 @@
 package com.example.event.event.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "outings")
@@ -28,6 +30,11 @@ public class Outing {
 
     private LocalDateTime updatedAt;
 
+    // Ajout de la relation avec les messages de chat
+    @OneToMany(mappedBy = "outing", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
+    private List<ChatMessage> chatMessages;
+
     // Constructeurs, getters et setters
 
     public Outing() {
@@ -46,6 +53,7 @@ public class Outing {
     public void setEventExternalId(Long eventExternalId) {
         this.eventExternalId = eventExternalId;
     }
+
     public String getTitle() {
         return title;
     }
@@ -92,6 +100,14 @@ public class Outing {
 
     public void setUpdatedAt(LocalDateTime updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public List<ChatMessage> getChatMessages() {
+        return chatMessages;
+    }
+
+    public void setChatMessages(List<ChatMessage> chatMessages) {
+        this.chatMessages = chatMessages;
     }
 
     public enum Visibility {

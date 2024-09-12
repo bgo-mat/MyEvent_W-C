@@ -14,7 +14,7 @@ export class OutlingService {
   }
 
   getOutlingById(eventId: any): Observable<any> {
-    return this.apiService.get(`outing/event/${eventId}`);
+    return this.apiService.get(`outing/event/${eventId}`, { responseType: 'json' });
   }
 
   getParticipantsByOutingId(id: string | null): Observable<any> {
@@ -33,5 +33,7 @@ export class OutlingService {
   joinOutingByInviteLink(inviteLink: string): Observable<any> {
     return this.apiService.post(`outing/join/${inviteLink}`, {});
   }
-
+  getMessagesForOuting(outingId: string): Observable<any> {
+    return this.apiService.get(`messages/${outingId}`);
+  }
 }

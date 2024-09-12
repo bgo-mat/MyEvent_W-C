@@ -5,7 +5,9 @@ import { NgForOf, NgIf } from '@angular/common';
 import { OpenAgendaService } from "../../Service/Fonction-service/open-agenda-service/open-agenda.service";
 import { GoogleMap, MapMarker } from '@angular/google-maps';
 import { AuthService } from "../../Service/Fonction-service/auth-service/auth.service";
-import {data} from "autoprefixer";
+import SockJS from 'sockjs-client';
+import Stomp from 'stompjs';
+import { FormsModule } from "@angular/forms";
 
 @Component({
   selector: 'app-outing-detail',
@@ -15,7 +17,8 @@ import {data} from "autoprefixer";
     NgForOf,
     NgIf,
     GoogleMap,
-    MapMarker
+    MapMarker,
+    FormsModule
   ],
   styleUrls: ['./outing-detail.component.css']
 })
@@ -28,14 +31,13 @@ export class OutingDetailComponent implements OnInit {
   public inviteLink: string | null = null;
   public copyMessage: string | null = null;
   public visibiliti: string | null = null;
+
+  messages: any[] = [];
+  messageContent: string = '';
+  stompClient: any;
   public outingId: any;
   public uid:any;
-
-  messages: any[] = [
-    { user: 'Host', text: 'Bienvenue à la sortie !' },
-    { user: 'Guest1', text: 'Merci de m\'avoir invité.' },
-    { user: 'Guest2', text: 'Hâte de vous rencontrer.' }
-  ];
+  public userName: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -52,22 +54,104 @@ export class OutingDetailComponent implements OnInit {
     if (this.uid && this.outingId) {
       this.getOutingDetails(this.uid);
       this.getParticipants(this.outingId);
-      this.outingService.getOutlingById(this.uid).subscribe(
-        data => {
-          for(let i = 0; i < data.body.length; i++){
-            if(data.body[i].id == this.outingId){
-              this.visibiliti = data.body[i].visibility;
-              break;
-            }
-          }
-        })
+      this.getMessages(this.outingId);  // Nouvelle méthode pour charger les messages
+      this.getCurrentUserAndConnectToSocket(this.outingId);
     } else {
       console.error('ID de la sortie non trouvé dans l’URL');
     }
   }
 
+  getCurrentUserAndConnectToSocket(outingId: string): void {
+    this.authService.getCurrentUser().subscribe({
+      next: (data) => {
+        this.userName = data.username;
+        this.connectToSocket(outingId);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération de l\'utilisateur connecté :', err);
+      }
+    });
+  }
 
-  // Vérifier si l'utilisateur connecté est le premier participant
+  connectToSocket(outingId: string): void {
+    const socket = new SockJS('http://localhost:8080/ws');
+    this.stompClient = Stomp.over(socket);
+
+    this.stompClient.connect({}, (frame: any) => {
+      this.stompClient.subscribe(`/topic/${outingId}`, (message: any) => {
+        this.onMessageReceived(JSON.parse(message.body));
+      });
+
+      this.stompClient.send(`/app/chat.addUser/${outingId}`, {}, JSON.stringify({
+        sender: this.userName,
+        type: 'JOIN'
+      }));
+    });
+  }
+
+  onMessageReceived(message: any): void {
+    this.messages.push(message);
+  }
+
+  sendMessage(): void {
+    if (this.messageContent && this.stompClient) {
+      const message = {
+        content: this.messageContent,
+        sender: this.userName,
+        outingId: this.outingId,
+        type: 'CHAT'
+      };
+      this.stompClient.send(`/app/chat.sendMessage/${this.outingId}`, {}, JSON.stringify(message));
+      this.messageContent = '';
+    }
+  }
+
+  // Nouvelle méthode pour récupérer les messages
+  getMessages(outingId: string): void {
+    this.outingService.getMessagesForOuting(this.outingId).subscribe({
+      next: (data) => {
+        console.log('Données reçues:', data);
+        const messages = Array.isArray(data.body) ? data.body : [];
+        this.messages = messages.filter((message: any) => message.type === 'CHAT');
+      },
+      error: (err) => {
+        console.error('Erreur lors de la récupération des messages :', err);
+      }
+    });
+  }
+
+
+
+  getOutingDetails(outingId: string) {
+    this.openAgendaService.getComponentById(outingId).subscribe({
+      next: data => {
+        this.outing = data.body.results[0];
+
+        if (this.outing && this.outing.location_coordinates) {
+          this.center = {
+            lat: this.outing.location_coordinates.lat,
+            lng: this.outing.location_coordinates.lon
+          };
+        }
+      },
+      error: err => {
+        console.error('Erreur lors de la récupération des détails de la sortie', err);
+      }
+    });
+  }
+
+  getParticipants(outingId: string) {
+    this.outingService.getParticipantsByOutingId(outingId).subscribe({
+      next: data => {
+        this.participants = data.body;
+        this.checkIfOrganizer();
+      },
+      error: err => {
+        console.error('Erreur lors de la récupération des participants', err);
+      }
+    });
+  }
+
   checkIfOrganizer(): void {
     if (this.participants.length > 0) {
       this.authService.getCurrentUser().subscribe({
@@ -83,45 +167,10 @@ export class OutingDetailComponent implements OnInit {
     }
   }
 
-  getOutingDetails(outingId: string) {
-    this.openAgendaService.getComponentById(outingId).subscribe({
-      next: data => {
-
-        this.outing = data.body.results[0];
-
-        if (this.outing && this.outing.location_coordinates) {
-          this.center = {
-            lat: this.outing.location_coordinates.lat,
-            lng: this.outing.location_coordinates.lon
-          };
-        }
-      },
-      error: err => {
-        console.error('Erreur lors de la récupération des détails de la sortie', err);
-      }
-    });
-
-  }
-
-  getParticipants(outingId: string) {
-    this.outingService.getParticipantsByOutingId(outingId).subscribe({
-      next: data => {
-        this.participants = data.body;
-        this.checkIfOrganizer();
-      },
-      error: err => {
-        console.error('Erreur lors de la récupération des participants', err);
-      }
-    });
-  }
-
-  // Générer un lien d'invitation
   generateInviteLink(): void {
-    const outingId = this.route.snapshot.paramMap.get('id');
-    this.outingService.generateInviteLink(outingId).subscribe({
+    this.outingService.generateInviteLink(this.outingId).subscribe({
       next: (data) => {
         this.inviteLink = data.body.inviteLink;
-        console.log('Lien d\'invitation généré:', this.inviteLink);
       },
       error: (err) => {
         console.error('Erreur lors de la génération du lien d\'invitation:', err);

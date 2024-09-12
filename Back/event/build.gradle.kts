@@ -35,6 +35,9 @@ dependencies {
 	// Pour la gestion des sessions si nécessaire
 	implementation("org.springframework.session:spring-session-core")
 	implementation("javax.servlet:javax.servlet-api:4.0.1")
+
+	//SOCKET
+	implementation("org.springframework.boot:spring-boot-starter-websocket")
 }
 
 tasks.withType<Test> {

@@ -31,7 +31,7 @@ public class UserService {
         Files.createDirectories(filePath.getParent());
         Files.write(filePath, imageBytes);
 
-        String avatarUrl = "http://localhost:8080/avatars/" + fileName;
+        String avatarUrl = "http://51.75.162.147:8080/avatars/" + fileName;
         user.setAvatar(avatarUrl);
         userRepository.save(user);
 

@@ -27,11 +27,11 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
             String registrationId = oauthToken.getAuthorizedClientRegistrationId();
 
             if (registrationId.equals("google")) {
-                return "http://localhost:4200/google-callback";
+                return "http://51.75.162.147:4200/google-callback";
             }
 
             if (registrationId.equals("discord")) {
-                return "http://localhost:4200/discord-callback";
+                return "http://51.75.162.147:4200/discord-callback";
             }
         }
 
