@@ -28,7 +28,7 @@ export class CardSortieComponent implements OnInit {
 
   constructor(private router: Router, private outlingService: OutlingService, private authService: AuthService) {}
 
-  
+
   ngOnInit() {
     this.getCurrentUser();
     this.getAllParticipants();
@@ -68,7 +68,7 @@ export class CardSortieComponent implements OnInit {
   }
 
   connectToSocket(outingId: string): void {
-    const socket = new SockJS('http://localhost:8080/ws');
+    const socket = new SockJS('http://51.75.162.147:8080/ws');
     this.stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str), // Pour déboguer les connexions
