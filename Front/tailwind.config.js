@@ -21,6 +21,12 @@ module.exports = {
       },
       height: {
         'screen-minus-64': 'calc(100vh - 64px)',
+      },
+      minHeight: {
+        'screen-minus-64': 'calc(100vh - 64px)',
+      },
+      borderColor:{
+        bluePimp : '#60A5FA',
       }
     },
   },

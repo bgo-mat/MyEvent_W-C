@@ -26,4 +26,12 @@ export class OutlingService {
   getOutlingByUserId(): Observable<any> {
     return this.apiService.get(`outing/user-joined`);
   }
+
+  generateInviteLink(outingId: string | null): Observable<any> {
+    return this.apiService.post(`outing/${outingId}/generate-invite`, {});
+  }
+  joinOutingByInviteLink(inviteLink: string): Observable<any> {
+    return this.apiService.post(`outing/join/${inviteLink}`, {});
+  }
+
 }

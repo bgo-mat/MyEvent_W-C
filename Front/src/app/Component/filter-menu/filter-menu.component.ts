@@ -30,17 +30,18 @@ export class FilterMenuComponent {
   //DISPLAY LIST
   @Input() displayKeywordArray!: any;
   @Input() displayCityArray!: any;
-  @Input() errorMsg!: any;
-  @Input() showError!:any;
+
 
   submitFilterMenu() {
     this.filterChange.emit({
       location: this.location,
-      title: this.title,
+      title: this.title.trim(),
       startDate: this.startDate,
       endDate: this.endDate,
       keyword : this.keyword
     });
+
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   submitSearchKeyword(event:any) {

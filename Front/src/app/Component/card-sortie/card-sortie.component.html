@@ -1,15 +1,14 @@
-@if(sortie.visibility === "PUBLIC"){
-<div class="flex flex-col justify-between bg-white border border-gray-200 rounded-lg shadow-md p-6 m-4 w-full transition hover:shadow-lg">
-  <!-- Conteneur pour le texte -->
-  <div class="flex flex-col text-left">
-    <h3 class="font-bold text-lg text-gray-800">{{ sortie.title }}</h3>
-    <p class="text-gray-600">Organisateur: {{ sortie.organizer.name }}</p>
-  </div>
-
+<!-- Sortie publique : affichée pour tout le monde -->
+@if(sortie.visibility === "PUBLIC") {
+<div class="flex flex-col justify-between bg-white h-full border border-gray-200 rounded-lg shadow-md p-6 w-full transition hover:shadow-lg">
+<div class="flex flex-col text-left">
+<h3 class="font-bold text-lg text-gray-800">{{ sortie.title }}</h3>
+<p class="text-gray-600">Organisateur: {{ sortie.organizer.name }}</p>
+</div>
 
 
   <div class="mt-4 w-full flex justify-end">
-    <button  (click)="goToOutingDetail(sortie.id)" class="bg-bluePimp  text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-500 transition w-full sm:w-auto">
+    <button  (click)="goToOutingDetail(sortie.id)" class="  text-white font-semibold px-6 py-2 rounded-lg  bg-bluePimp hover:scale-105 transition-transform focus:bg-blue-500 w-full sm:w-auto">
       Rejoindre la sortie
     </button>
   </div>
@@ -28,7 +27,7 @@
         </div>
 
         <div class="mt-4 w-full flex justify-center">
-          <button (click)="redirectLog()" class="bg-bluePimp text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+          <button (click)="redirectLog()" class=" text-white font-semibold px-6 py-2 rounded-lg  bg-bluePimp hover:scale-105 transition-transform focus:bg-blue-500 w-full sm:w-auto">
             Se connecter
           </button>
         </div>
@@ -36,5 +35,25 @@
     </div>
   }
 
+</div>
+}
+
+
+@if(sortie.visibility === "PRIVATE" && (isOrganizer || isParticipant)) {
+
+<div class="flex flex-col justify-between bg-white h-full border border-gray-200 rounded-lg shadow-md p-6  w-full transition hover:shadow-lg">
+<div class="flex flex-col text-left">
+<h3 class="font-bold text-lg text-gray-800">{{ sortie.title }}</h3>
+<p class="text-gray-600">Organisateur: {{ sortie.organizer.name }}</p>
+
+</div>
+
+<p>{{ sortie.visibility }}</p>
+
+<div class="mt-4 w-full flex justify-end">
+<button (click)="goToOutingDetail(sortie.id)" class="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg hover:bg-blue-700 transition w-full sm:w-auto">
+Rejoindre la sortie
+</button>
+</div>
 </div>
 }

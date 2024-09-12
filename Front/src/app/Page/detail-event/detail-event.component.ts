@@ -6,7 +6,8 @@ import { MatDialog } from '@angular/material/dialog';
 import { OrganizeOutingFormComponent } from "../../Component/organize-outing-form/organize-outing-form.component";
 import { OutlingService } from "../../Service/Fonction-service/outling-service/outling.service";
 import { CardSortieComponent } from "../../Component/card-sortie/card-sortie.component";
-import {AuthService} from "../../Service/Fonction-service/auth-service/auth.service"; // Import CardSortieComponent
+import {AuthService} from "../../Service/Fonction-service/auth-service/auth.service";
+import {FormsModule} from "@angular/forms"; // Import CardSortieComponent
 
 @Component({
   selector: 'app-detail-event',
@@ -16,7 +17,8 @@ import {AuthService} from "../../Service/Fonction-service/auth-service/auth.serv
     DatePipe,
     NgClass,
     CommonModule,
-    CardSortieComponent
+    CardSortieComponent,
+    FormsModule
   ],
   templateUrl: './detail-event.component.html',
   styleUrl: './detail-event.component.css'
@@ -28,7 +30,9 @@ export class DetailEventComponent implements OnInit {
   public outings: any[] = [];
   public actualUser:any;
   public errorMsg:any = "";
+  inviteLink: string = '';
   public isVisible = false;
+
 
   constructor(
     private route: ActivatedRoute,
@@ -61,6 +65,27 @@ export class DetailEventComponent implements OnInit {
         console.log(error)
       }
     )
+  }
+
+  // VOIR REDIRECTION  ET AFFICHAGE ROOM PRIVE POUR TOUT LES MEMBRE
+  submitInvitationLink(): void {
+    console.log(this.inviteLink)
+    if (this.inviteLink) {
+      this.outling.joinOutingByInviteLink(this.inviteLink).subscribe(
+         response => {
+
+          console.log(response.body.eventUid)
+          alert('Vous avez rejoint la sortie avec succès !')
+          this.router.navigate(['/outing', response.body.roomId, response.body.eventUid]);
+          },
+        err => {
+          console.error('Erreur lors de la tentative de rejoindre la sortie avec le lien :', err);
+          alert('Erreur : Le lien d\'invitation est invalide ou a expiré.');
+        }
+      );
+    } else {
+      alert('Veuillez entrer un lien d\'invitation.');
+    }
   }
 
   getEventFromEvent() {
@@ -120,5 +145,9 @@ export class DetailEventComponent implements OnInit {
 
   redirectLog(){
     this.router.navigate(['/login'])
+  }
+
+  redirectBack(){
+    this.router.navigate(['/'])
   }
 }

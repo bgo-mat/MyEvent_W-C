@@ -32,7 +32,7 @@ public class AuthService {
 
             User user;
             if (existingUser.isEmpty()) {
-                user = new User(email, name, googleId, null, null, "");
+                user = new User(email, name, googleId, null, null, "", null);
                 userRepository.save(user);
             } else {
                 user = existingUser.get();
@@ -63,7 +63,7 @@ public class AuthService {
 
             User user;
             if (existingUser.isEmpty()) {
-                user = new User(email, username, null, discordId, username, "");
+                user = new User(email, username, null, discordId, username, "", null);
                 userRepository.save(user);
             } else {
                 user = existingUser.get();
@@ -102,7 +102,7 @@ public class AuthService {
                     userInfo.put("email", email);
                     userInfo.put("provider", "Google");
                     userInfo.put("bio", user.getBio() != null ? user.getBio() : "");
-
+                    userInfo.put("avatar", user.getAvatar() != null ? user.getAvatar() : "");
                     return userInfo;
                 }
             }
@@ -120,7 +120,7 @@ public class AuthService {
                     userInfo.put("email", email);
                     userInfo.put("provider", "Discord");
                     userInfo.put("bio", user.getBio() != null ? user.getBio() : "");
-
+                    userInfo.put("avatar", user.getAvatar() != null ? user.getAvatar() : "");
                     return userInfo;
                 }
             }

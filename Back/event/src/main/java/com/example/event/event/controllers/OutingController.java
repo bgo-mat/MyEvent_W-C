@@ -80,6 +80,26 @@ public class OutingController {
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     }
+
+    @PostMapping("/{id}/generate-invite")
+    public ResponseEntity<Map<String, String>> generateInviteLink(@PathVariable Long id, Authentication authentication) {
+        String inviteLink = outingService.generateInviteLink(id, authentication);
+        Map<String, String> response = new HashMap<>();
+        response.put("inviteLink", inviteLink);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PostMapping("/join/{inviteLink}")
+    public ResponseEntity<Map<String, Object>> joinOutingByInviteLink(@PathVariable String inviteLink, @AuthenticationPrincipal OAuth2User currentUser) {
+        Outing outing = outingService.joinOutingByInviteLink(inviteLink, currentUser);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("roomId", outing.getId());
+        response.put("eventUid", outing.getEventExternalId());
+
+        return ResponseEntity.ok(response);
+    }
 }
 
 

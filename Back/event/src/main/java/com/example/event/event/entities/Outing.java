@@ -15,6 +15,8 @@ public class Outing {
 
     private String title;
 
+    private String inviteLink; // Nouveau champ pour stocker le lien d'invitation
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "organizer_id", nullable = false)
     private User organizer;
@@ -27,12 +29,12 @@ public class Outing {
     private LocalDateTime updatedAt;
 
     // Constructeurs, getters et setters
+
     public Outing() {
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
     }
 
-    // Getters et Setters
     public Long getId() {
         return id;
     }
@@ -44,7 +46,6 @@ public class Outing {
     public void setEventExternalId(Long eventExternalId) {
         this.eventExternalId = eventExternalId;
     }
-
     public String getTitle() {
         return title;
     }
@@ -67,6 +68,14 @@ public class Outing {
 
     public void setVisibility(Visibility visibility) {
         this.visibility = visibility;
+    }
+
+    public String getInviteLink() {
+        return inviteLink;
+    }
+
+    public void setInviteLink(String inviteLink) {
+        this.inviteLink = inviteLink;
     }
 
     public LocalDateTime getCreatedAt() {

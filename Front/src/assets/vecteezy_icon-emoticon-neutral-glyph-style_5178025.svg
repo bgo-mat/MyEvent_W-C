@@ -1,0 +1,13 @@
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- Visage -->
+  <circle  cx="50" cy="50" r="40" stroke="#60A5FA" stroke-width="3" fill="#60A5FA" />
+
+  <!-- Oeil gauche -->
+  <circle cx="35" cy="40" r="5" fill="white" />
+
+  <!-- Oeil droit -->
+  <circle cx="65" cy="40" r="5" fill="white" />
+
+  <!-- Bouche triste -->
+  <path d="M35,65 Q50,55 65,65" stroke="white" stroke-width="3" fill="none" />
+</svg>

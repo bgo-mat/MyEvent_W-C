@@ -1,13 +1,23 @@
-<div *ngIf="result.image" class="flex flex-col md:flex-row h-auto md:h-56 border rounded-lg overflow-hidden w-full md:w-11/12">
+<div class="flex flex-col md:flex-row h-auto md:h-56  rounded-lg overflow-hidden w-full md:w-11/12 bg-white shadowPim">
   <div class="flex-shrink-0 w-full md:w-auto">
-    <img class="h-56 w-full md:w-40 object-cover" src="{{ result.image }}" alt="Event image"/>
+    @if(result.image){
+      <img class="h-56 w-full md:w-40 object-cover" src="{{ result.image }}" alt="Event image"/>
+    }@else{
+      <div class="h-56 w-full md:w-40 bg-gray-300 flex items-center justify-center">
+        <p class="w-10/12 text-center ">Aucune image disponible pour cet événement</p>
+      </div>
+    }
   </div>
   <div class="p-4 flex flex-col justify-between w-full md:w-full">
     <div class="flex justify-between mt-4 md:mt-0 h-auto md:h-2/6" >
       <h1 class="text-lg md:text-xl font-bold truncate md:whitespace-normal h-full">
         {{ result.title_fr }}
       </h1>
-      <a href="javascript:void(0);" class="text-blue-500 hover:text-blue-500 font-semibold" (click)="redirectEventDetail(result.uid)">En savoir +</a></div>
+      <button (click)="redirectEventDetail(result.uid)" class="bg-bluePimp text-white px-3 py-1 h-fit  rounded-lg hover:scale-105 transition-transform focus:bg-blue-500">
+        En savoir +
+      </button>
+    </div>
+
     <div class="h-auto md:h-full flex flex-col gap-3">
       <p class="text-sm md:text-base  text-justify h-auto md:h-2/6 overflow-hidden text-ellipsis md:whitespace-normal" style="display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical;">
         {{ result.description_fr }}

@@ -1,7 +1,7 @@
 <div class="flex flex-col md:flex-row bg h-full w-full border-r-4 md:pb-16 bg-white ">
   <!-- Bouton du Menu Burger (Visible uniquement en mobile) -->
   <div class="flex items-center justify-between px-4 py-2 md:hidden">
-    <a href="#" class="text-lg font-semibold tracking-widest text-gray-900 uppercase dark:text-white">Filtres</a>
+    <a class="text-lg font-semibold tracking-widest text-gray-900 uppercase">Filtres</a>
     <button class="rounded-lg focus:outline-none focus:shadow-outline" (click)="toggleMenu()">
       <svg *ngIf="!isMenuOpen" fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
         <path fill-rule="evenodd" d="M3 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2z" clip-rule="evenodd"></path>
@@ -21,8 +21,8 @@
       'md:translate-x-0': true
     }"
   >
-    <div class="flex-shrink-0 px-8 py-4 flex flex-row items-center justify-between md:justify-start ">
-      <a href="#" class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg dark:text-white focus:outline-none focus:shadow-outline">Filtres</a>
+    <div class="flex-shrink-0 bg-white px-8 py-4 flex flex-row items-center justify-between md:justify-start ">
+      <a class="text-lg font-semibold tracking-widest text-gray-900 uppercase rounded-lg  focus:outline-none focus:shadow-outline">Filtres</a>
       <button class="rounded-lg md:hidden focus:outline-none focus:shadow-outline" (click)="toggleMenu()">
         <svg fill="currentColor" viewBox="0 0 20 20" class="w-6 h-6">
           <path *ngIf="!isMenuOpen" fill-rule="evenodd" d="M3 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2zm0 5h14a1 1 0 100-2H3a1 1 0 100 2z" clip-rule="evenodd"></path>
@@ -32,7 +32,7 @@
     </div>
 
     <!-- Formulaire pour les filtres -->
-    <form class="flex-grow px-4 pb-4 md:pb-0 md:overflow-y-auto">
+    <form class="flex-grow px-4 pb-4 md:pb-0 md:overflow-y-auto bg-white">
 
       <!-- Champ de recherche par titre -->
       <div class="mt-4">
@@ -145,12 +145,6 @@
           <div class="button__drow2"></div>
         </button>
       </div>
-
-      @if(errorMsg !== ""){
-        <p [ngClass]="{'text-red-500 mt-2 text-md shake': true}">
-          {{errorMsg}}
-        </p>
-      }
     </form>
   </div>
 

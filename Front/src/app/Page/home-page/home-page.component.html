@@ -1,4 +1,4 @@
-<div class="flex flex-col md:flex-row gap-5 h-full items-start ">
+<div class="flex flex-col md:flex-row gap-5 h-full items-start " id='a'>
   <!-- Menu des filtres -->
   <app-filter-menu
     class="h-full w-full md:w-auto md:fixed"
@@ -7,12 +7,10 @@
     (filterChange)="onFilterChange($event)"
     (keywordEmit)="searchByKeyword($event)"
     (cityEmit)="searchByCity($event)"
-    [errorMsg] ="errorMsg"
-    [showError] ="showError"
   >
   </app-filter-menu>
-  <div class="flex flex-col gap-2 w-full p-5 md:ml-[256px]">
-    <h1 class="text-xl">Événements à venir</h1>
+  <div class="flex flex-col gap-8 w-full p-5 md:ml-[256px] min-h-screen-minus-64 justify-between">
+    <h1 class="text-lg font-semibold text-gray-900">Événements à venir</h1>
     @if(results.length > 0) {
       @for(result of results; track result.uid) {
           <app-card-event [result]="result"></app-card-event>
@@ -25,24 +23,50 @@
       }
     }
 
-    <!--PAGINATTION-->
+    <!--BLOCK NO RESULT-->
 
-    <div class="flex justify-between w-11/12 mt-4">
+    @if(showError){
+      <div class=" flex flex-col w-full items-center justify-center">
+        <img src="assets/vecteezy_icon-emoticon-neutral-glyph-style_5178025.svg" class="w-4/12">
+        <p class="text-xl ">{{errorMsg}}</p>
+      </div>
+    }
+
+
+    <!-- PAGINATION -->
+    <div class="flex justify-center gap-4 items-center w-11/12 mt-4">
+      <!-- Bouton Précédent -->
       <button
         class="bg-bluePimp hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-l"
         (click)="previousPage()"
-        [disabled]="offset <= 0"
+        [disabled]="currentPage === 1"
       >
-        < Précédent
+        &lt; Précédent
       </button>
 
+      <!-- Liste des Pages -->
+      <div class="flex gap-4">
+
+        <button
+          *ngFor="let page of pages"
+          class="bg-gray-200 hover:bg-gray-300 text-black font-bold py-2 px-3 rounded"
+          [ngClass]="{'bg-bluePimp  text-white': page === currentPage, 'bg-gray-200 hover:bg-gray-300': page !== currentPage}"
+          (click)="goToPage(page)"
+        >
+
+          {{ page }}
+        </button>
+      </div>
+
+      <!-- Bouton Suivant -->
       <button
         class="bg-bluePimp hover:bg-blue-500 text-white font-bold py-2 px-4 rounded-r"
         (click)="nextPage()"
       >
-        Suivant >
+        Suivant &gt;
       </button>
     </div>
+
 
   </div>
 </div>

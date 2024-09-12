@@ -5,6 +5,7 @@ import { Router } from "@angular/router";
 import { OutlingService } from "../../Service/Fonction-service/outling-service/outling.service";
 import { CardOutlingProfilComponent } from "../../Component/card-outling-profil/card-outling-profil.component";
 import {NgIf} from "@angular/common";
+import {routes} from "../../app.routes";
 
 @Component({
   selector: 'app-user-profil-page',
@@ -66,11 +67,33 @@ export class UserProfilPageComponent implements OnInit {
 
   // UPLOAD AVATAR
   onFileSelected(event: any) {
-    const file = event.target.files[0];
+    const file: File = event.target.files[0];
     if (file) {
-      console.log(file);
+      if (!file.type.startsWith('image/')) {
+        alert('Veuillez sélectionner un fichier image.');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = () => {
+        const base64String = reader.result as string;
+        const base64Image = base64String.split(',')[1];
+
+        this.authService.uploadAvatarBase64(base64Image).subscribe(
+          (response) => {
+            window.location.reload();
+            alert('Avatar mis à jour avec succès !');
+          },
+          (err) => {
+            console.error('Erreur lors de l\'upload de l\'avatar :', err);
+          }
+        );
+      };
+      reader.readAsDataURL(file);
     }
   }
+
+
 
   initUser() {
     this.authService.getCurrentUser().subscribe(
@@ -94,5 +117,9 @@ export class UserProfilPageComponent implements OnInit {
         console.log(error);
       }
     );
+  }
+
+  redirectBack(){
+    this.router.navigate(['/'])
   }
 }

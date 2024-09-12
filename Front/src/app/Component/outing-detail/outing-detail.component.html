@@ -1,61 +1,95 @@
-<div class="flex flex-col h-screen-minus-64 p-4">
-  <!-- Event Section (en haut) -->
-  <div *ngIf="outing" class="bg-white shadow-md rounded-lg p-6 mb-6">
-    <h2 class="text-xl font-semibold mb-4 text-center md:text-left">Sortie : {{ outing.title }}</h2>
+<div class="flex justify-center h-screen-minus-64 px-8 pb-4">
+  <div class="flex w-full md:w-11/12 lg:w-9/12 h-full flex-col">
+    <div class="w-full flex justify-start my-2 ">
 
-    <div class="map-container flex flex-col md:flex-row gap-6">
-      <img [src]="outing.image" alt="Image de l'événement"
-           class="max-h-60 md:max-h-80 w-full md:w-1/3 object-contain rounded-lg shadow-md mb-4 md:mb-0">
+      <button (click)="redirectBack()" class="  sm:mt-0 border border-bluePimp text-textPimp px-3 py-1 rounded-lg hover:scale-105 transition-transform focus:scale-100">
+        Retour
+      </button>
 
-      <!-- Détails de l'événement -->
-      <div class="flex flex-col gap-4 p-4 md:w-2/3">
-        <h3 class="font-bold text-lg text-gray-800">{{ outing.title_fr }}</h3>
-        <div class="w-full flex gap-2 items-center">
-          <img src="assets/calendar-days-svgrepo-com.svg" class="w-8">
-          <p class="text-sm md:text-base text-justify h-auto overflow-hidden text-ellipsis"> {{ outing.daterange_fr }}</p>
+    </div>
+    <!-- Event Section (en haut) -->
+    <div *ngIf="outing" class="bg-white shadow-md  rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4  md:text-left">Sortie : {{ outing.title }}</h2>
+
+      <div class="map-container flex flex-col gap-6">
+        <div class="flex w-full flex-col md:flex-row gap-4 md:gap-0 items-center md:justify-around">
+          <img [src]="outing.image" alt="Image de l'événement"
+               class="w-[300px] h-[300px]  object-cover rounded-lg shadow-md  md:mb-0">
+
+          <google-map class="flex items-center justify-center rounded-lg" [center]="center" [zoom]="zoom" height="300px" width="300px">
+            <map-marker [position]="center"></map-marker>
+          </google-map>
         </div>
-        <p class="text-sm md:text-base text-justify overflow-hidden text-ellipsis" [innerHTML]="outing.longdescription_fr"></p>
+
+        <!-- Détails de l'événement -->
+        <div class="flex flex-col gap-4 p-4 w-full">
+          <h3 class="font-bold text-lg text-gray-800">{{ outing.title_fr }}</h3>
+          <div class="w-full flex gap-2 items-center">
+            <img src="assets/calendar-days-svgrepo-com.svg" class="w-8">
+            <p class="text-sm md:text-base text-justify h-auto overflow-hidden text-ellipsis"> {{ outing.daterange_fr }}</p>
+          </div>
+          <p class="text-sm md:text-base text-justify overflow-hidden text-ellipsis" [innerHTML]="outing.longdescription_fr"></p>
+        </div>
+
       </div>
-      <google-map class="flex items-center justify-center" [center]="center" [zoom]="zoom" height="400px" width="350px">
-        <map-marker [position]="center"></map-marker>
-      </google-map>
+
+      <div *ngIf="isOrganizer && visibiliti === 'PRIVATE'" class="mt-4">
+        <button *ngIf="isOrganizer" (click)="generateInviteLink()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
+          Générer un lien d'invitation
+        </button>
+
+        <div *ngIf="inviteLink" class="mt-6 flex flex-col items-start justify-start gap-4">
+          <p class="text-gray-700 text-center">
+            Lien d'invitation :
+            <a [href]="inviteLink" target="_blank"
+               class="text-blue-500 font-semibold underline hover:text-blue-700 transition duration-300">
+              {{ inviteLink }}
+            </a>
+          </p>
+
+          <button (click)="copyToClipboard(inviteLink)"
+                  class="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300">
+            Copier le lien
+          </button>
+          <p>{{ copyMessage }}</p>
+        </div>
+
+      </div>
     </div>
 
-  </div>
+    <!-- Bottom section: Participants (left) and Chat (right) -->
+    <div class="flex-1 flex flex-col md:flex-row">
+      <!-- Participants Section -->
+      <div class="w-full md:w-3/12 lg:w-2/12 bg-gray-800 text-white p-4 overflow-y-auto">
+        <h3 class="text-lg font-semibold mb-4">Participants</h3>
+        <div class="space-y-4">
+          <div class="participant flex items-center space-x-3" *ngFor="let participant of participants">
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="green" />
+            </svg>
 
-  <!-- Bottom section: Participants (left) and Chat (right) -->
-  <div class="flex-1 flex flex-col md:flex-row">
-    <!-- Participants Section -->
-    <div class="w-full md:w-3/12 lg:w-2/12 bg-gray-800 text-white p-4 overflow-y-auto">
-      <h3 class="text-lg font-semibold mb-4">Participants</h3>
-      <div class="space-y-4">
-        <div class="participant flex items-center space-x-3" *ngFor="let participant of participants">
-          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="10" cy="10" r="10" fill="green" />
-          </svg>
-
-          <span>{{ participant.name }}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Chat Section -->
-    <div class="flex-1 bg-white p-4 flex flex-col">
-      <h3 class="text-lg font-semibold mb-4">Chat</h3>
-      <!-- Chat messages -->
-      <div class="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto space-y-4">
-        <div class="message" *ngFor="let message of messages">
-          <div class="message-info flex items-center space-x-2">
-            <span class="font-semibold text-gray-700">{{ message.user }}:</span>
-            <span class="text-gray-600">{{ message.text }}</span>
+            <span>{{ participant.name }}</span>
           </div>
         </div>
       </div>
-      <!-- Input for sending messages -->
-      <div class="mt-4 flex space-x-3">
-        <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Écrivez un message..." disabled>
-        <button class="bg-blue-500 text-white p-2 rounded-lg" disabled>Envoyer</button>
+
+      <!-- Chat Section -->
+      <div class="flex-1 bg-white p-4 flex flex-col">
+        <h3 class="text-lg font-semibold mb-4">Chat</h3>
+        <div class="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto space-y-4">
+          <div class="message" *ngFor="let message of messages">
+            <div class="message-info flex items-center space-x-2">
+              <span class="font-semibold text-gray-700">{{ message.user }}:</span>
+              <span class="text-gray-600">{{ message.text }}</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 flex space-x-3">
+          <input type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Écrivez un message..." disabled>
+          <button class="bg-blue-500 text-white p-2 rounded-lg" disabled>Envoyer</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+
+  </div>

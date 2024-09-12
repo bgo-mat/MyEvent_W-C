@@ -5,6 +5,7 @@ import { OpenAgendaService } from "../../Service/Fonction-service/open-agenda-se
 import {AuthService} from "../../Service/Fonction-service/auth-service/auth.service";
 import {UserDataService} from "../../Service/Data-service/user-data.service";
 import {CardEventSkeletonComponent} from "../../Component/Skeleton/card-event-skeleton/card-event-skeleton.component";
+import {NgClass, NgForOf} from "@angular/common";
 
 @Component({
   selector: 'app-home-page',
@@ -12,7 +13,9 @@ import {CardEventSkeletonComponent} from "../../Component/Skeleton/card-event-sk
   imports: [
     CardEventComponent,
     FilterMenuComponent,
-    CardEventSkeletonComponent
+    CardEventSkeletonComponent,
+    NgForOf,
+    NgClass
   ],
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.css']
@@ -26,6 +29,8 @@ export class HomePageComponent implements OnInit {
   public showError = false;
   private userLocation: any;
   public offset: number = 0;
+  currentPage: number = 1;
+  pages: number[] = [];
   public loading = true;
   public skeletonIterations : any = Array(20);
 
@@ -33,28 +38,25 @@ export class HomePageComponent implements OnInit {
 
   ngOnInit() {
     // Charger les événements par défaut
-
+    this.updatePages();
     this.getCurrentLocation();
   }
 
   // Méthode pour récupérer les événements
   getEvent(location?: string, title?: string, startDate?: string, endDate?: string, keywords?: any) {
     this.loading = true;
-    console.log("toto")
     this.results = [];
     this.openAgendaService.getApi(location, title, keywords, startDate, endDate, this.userLocation, this.offset).subscribe(
       data => {
         this.loading = false;
         if(data.body.results.length<1){
-          this.errorMsg = "Aucun événement en lien avec votre recherche."
+          this.errorMsg = "Oups ! Aucun événement n'est en lien avec votre recherche."
           this.showError = true;
-          setTimeout(() => this.showError = false, 200);
         }else{
           this.errorMsg ="";
           this.showError = false;
           this.results = data.body.results;
         }
-        console.log(this.results)
       }
     );
   }
@@ -122,11 +124,6 @@ export class HomePageComponent implements OnInit {
 
   // Gestion du changement de filtre
   onFilterChange(event: { location: string, title: string, startDate: string, endDate: string, keyword: string }) {
-    console.log("Received location:", event.location);
-    console.log("Received category:", event.title);
-    console.log("Received start date:", event.startDate);
-    console.log("Received end date:", event.endDate);
-
     // Appeler getEvent avec les catégories et les dates
     this.getEvent(event.location, event.title, event.startDate, event.endDate, event.keyword);
   }
@@ -151,17 +148,55 @@ export class HomePageComponent implements OnInit {
 
   //GESTION PAGINATION
   nextPage() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    this.offset += 30;
-    this.getEvent();
+    if (this.currentPage < this.pages[this.pages.length - 1]) {
+      this.currentPage++;
+      this.updateOffset();
+      this.updatePages();
+      this.getEvent();
+      // @ts-ignore
+      document.getElementById("a").scrollIntoView();
+    }
   }
 
   previousPage() {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    if (this.offset > 0) {
-      this.offset -= 30;
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.updateOffset();
+      this.updatePages();
+      this.getEvent();
+      // @ts-ignore
+      document.getElementById("a").scrollIntoView();
     }
+  }
+
+  goToPage(page: number) {
+    this.currentPage = page;
+    this.updateOffset();
+    this.updatePages();
     this.getEvent();
+    // @ts-ignore
+    document.getElementById("a").scrollIntoView();
+  }
+
+  updateOffset() {
+    this.offset = (this.currentPage - 1) * 30;
+  }
+
+  updatePages() {
+    const totalPages = 100;
+    this.pages = [];
+
+    const maxVisiblePages = 5;
+    let startPage = Math.max(1, this.currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1);
+
+    if (endPage - startPage + 1 < maxVisiblePages) {
+      startPage = Math.max(1, endPage - maxVisiblePages + 1);
+    }
+
+    for (let i = startPage; i <= endPage; i++) {
+      this.pages.push(i);
+    }
   }
 
 }

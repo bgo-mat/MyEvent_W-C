@@ -1,9 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import { OutlingService } from '../../Service/Fonction-service/outling-service/outling.service';
-import {NgForOf, NgIf} from '@angular/common';
-import {OpenAgendaService} from "../../Service/Fonction-service/open-agenda-service/open-agenda.service";
+import { NgForOf, NgIf } from '@angular/common';
+import { OpenAgendaService } from "../../Service/Fonction-service/open-agenda-service/open-agenda.service";
 import { GoogleMap, MapMarker } from '@angular/google-maps';
+import { AuthService } from "../../Service/Fonction-service/auth-service/auth.service";
+import {data} from "autoprefixer";
 
 @Component({
   selector: 'app-outing-detail',
@@ -18,11 +20,16 @@ import { GoogleMap, MapMarker } from '@angular/google-maps';
   styleUrls: ['./outing-detail.component.css']
 })
 export class OutingDetailComponent implements OnInit {
-
-  outing: any;
+  outing: any = null;
   participants: any[] = [];
   center: google.maps.LatLngLiteral = { lat: 0, lng: 0 };
   zoom = 12;
+  public isOrganizer: boolean = false;
+  public inviteLink: string | null = null;
+  public copyMessage: string | null = null;
+  public visibiliti: string | null = null;
+  public outingId: any;
+  public uid:any;
 
   messages: any[] = [
     { user: 'Host', text: 'Bienvenue à la sortie !' },
@@ -34,28 +41,45 @@ export class OutingDetailComponent implements OnInit {
     private route: ActivatedRoute,
     private outingService: OutlingService,
     private openAgendaService: OpenAgendaService,
+    private authService: AuthService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    const outingId = this.route.snapshot.paramMap.get('id');
-    const uid = this.route.snapshot.paramMap.get('uid');
+    this.outingId = this.route.snapshot.paramMap.get('id');
+    this.uid = this.route.snapshot.paramMap.get('uid');
 
-    if (uid && outingId) {
-      this.getOutingDetails(uid);
-      this.getParticipants(outingId);
-
-      this.outingService.getOutlingById(outingId).subscribe(
+    if (this.uid && this.outingId) {
+      this.getOutingDetails(this.uid);
+      this.getParticipants(this.outingId);
+      this.outingService.getOutlingById(this.uid).subscribe(
         data => {
-          console.log(data)
+          for(let i = 0; i < data.body.length; i++){
+            if(data.body[i].id == this.outingId){
+              this.visibiliti = data.body[i].visibility;
+              break;
+            }
+          }
         })
     } else {
       console.error('ID de la sortie non trouvé dans l’URL');
     }
+  }
 
-    if (uid) {
-      console.log('UID de l\'événement externe:', uid);
-    } else {
-      console.error('UID non trouvé dans l’URL');
+
+  // Vérifier si l'utilisateur connecté est le premier participant
+  checkIfOrganizer(): void {
+    if (this.participants.length > 0) {
+      this.authService.getCurrentUser().subscribe({
+        next: (data) => {
+          if (data.username === this.participants[0].name) {
+            this.isOrganizer = true;
+          }
+        },
+        error: (err) => {
+          console.error('Erreur lors de la récupération de l\'utilisateur connecté :', err);
+        }
+      });
     }
   }
 
@@ -82,12 +106,38 @@ export class OutingDetailComponent implements OnInit {
   getParticipants(outingId: string) {
     this.outingService.getParticipantsByOutingId(outingId).subscribe({
       next: data => {
-        console.log('Participants:', data);
         this.participants = data.body;
+        this.checkIfOrganizer();
       },
       error: err => {
         console.error('Erreur lors de la récupération des participants', err);
       }
     });
+  }
+
+  // Générer un lien d'invitation
+  generateInviteLink(): void {
+    const outingId = this.route.snapshot.paramMap.get('id');
+    this.outingService.generateInviteLink(outingId).subscribe({
+      next: (data) => {
+        this.inviteLink = data.body.inviteLink;
+        console.log('Lien d\'invitation généré:', this.inviteLink);
+      },
+      error: (err) => {
+        console.error('Erreur lors de la génération du lien d\'invitation:', err);
+      }
+    });
+  }
+
+  copyToClipboard(link: string): void {
+    navigator.clipboard.writeText(link).then(() => {
+      this.copyMessage = 'Lien copié dans le presse-papiers !';
+    }).catch(err => {
+      console.error('Échec de la copie du lien :', err);
+    });
+  }
+
+  redirectBack(){
+    this.router.navigate(['/event-detail', this.uid])
   }
 }

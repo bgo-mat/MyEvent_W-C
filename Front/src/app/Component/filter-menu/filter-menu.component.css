@@ -167,7 +167,7 @@
 .button__drow2,
 .button__drow2::before,
 .button__drow2::after{
-  background : var( --back_color ) ;
+  background : #60A5FA ;
 }
 .button:hover .button__drow1{
   animation : drow1 ease-in .06s ;

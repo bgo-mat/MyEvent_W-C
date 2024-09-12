@@ -5,13 +5,21 @@
 
       <div class="flex space-x-4">
         <!-- logo -->
-        <div>
+        <div class=" flex gap-4 items-center">
           <a (click)="redirectAccueil()" class="flex items-center py-5 px-2 text-gray-700 hover:scale-105 transition-transform cursor-pointer">
             <svg class="h-6 w-6 mr-1 text-blue-400" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
             </svg>
             <span class="font-bold">AroundMe</span>
           </a>
+
+          @if(username){
+            <div class="flex gap-2 items-center">
+              <p class="text-sm">Bonjour {{  username }}</p>
+              <img src="assets/smile.svg" class="w-8">
+
+            </div>
+          }
         </div>
       </div>
 
@@ -21,10 +29,6 @@
 
         <div *ngIf="username" class="flex  items-center gap-4">
         <svg (click)="logout()" class="cursor-pointer hover:scale-105 transition-transform" fill="#60A5FA" xmlns="http://www.w3.org/2000/svg" width="35" height="35" viewBox="0 0 24 24"><path d="M16 13v-2H7V8l-5 4 5 4v-3z"/><path d="M20 3h-9c-1.103 0-2 .897-2 2v4h2V5h9v14h-9v-4H9v4c0 1.103.897 2 2 2h9c1.103 0 2-.897 2-2V5c0-1.103-.897-2-2-2z"/></svg>
-          <div class="flex flex-col">
-            <p class="text-sm">Bonjour,</p>
-            <p class="text-sm">{{  username }}</p>
-          </div>
         </div>
       </div>
 

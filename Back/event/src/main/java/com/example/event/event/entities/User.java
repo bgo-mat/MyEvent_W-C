@@ -16,17 +16,26 @@ public class User {
     private String discordId;
     private String discordUsername;
     private String bio;
+    private String avatar;
 
     // Constructeurs, getters et setters
     public User() {}
 
-    public User(String email, String name, String googleId, String discordId, String discordUsername, String bio) {
+    public User(String email, String name, String googleId, String discordId, String discordUsername, String bio, String avatar) {
         this.email = email;
         this.name = name;
         this.googleId = googleId;
         this.discordId = discordId;
         this.discordUsername = discordUsername;
         this.bio = bio;
+        this.avatar = avatar;
+    }
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        this.avatar = avatar;
     }
 
     public String getBio() {

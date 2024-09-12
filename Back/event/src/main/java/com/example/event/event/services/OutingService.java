@@ -7,12 +7,12 @@ import com.example.event.event.repositories.OutingParticipantRepository;
 import com.example.event.event.repositories.OutingRepository;
 import com.example.event.event.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -97,4 +97,70 @@ public class OutingService {
                 .map(OutingParticipant::getOuting)
                 .collect(Collectors.toList());
     }
+
+    public String generateInviteLink(Long outingId, Authentication authentication) {
+        if (authentication.getPrincipal() instanceof OAuth2User oAuth2User) {
+            String googleId = oAuth2User.getAttribute("sub");
+            String discordId = oAuth2User.getAttribute("id");
+
+            Outing outing = outingRepository.findById(outingId)
+                    .orElseThrow(() -> new RuntimeException("Sortie non trouvée"));
+
+            if (googleId != null) {
+                if (!outing.getOrganizer().getGoogleId().equals(googleId)) {
+                    throw new RuntimeException("Seul l'organisateur peut générer un lien.");
+                }
+            } else if (discordId != null) {
+                if (!outing.getOrganizer().getDiscordId().equals(discordId)) {
+                    throw new RuntimeException("Seul l'organisateur peut générer un lien.");
+                }
+            } else {
+                throw new RuntimeException("Utilisateur non authentifié.");
+            }
+
+            String inviteLink = UUID.randomUUID().toString();
+            outing.setInviteLink(inviteLink);
+            outingRepository.save(outing);
+
+            return inviteLink;
+        }
+
+        throw new RuntimeException("Utilisateur non authentifié.");
+    }
+
+    public Outing joinOutingByInviteLink(String inviteLink, OAuth2User oAuth2User) {
+        // Récupérer l'ID de l'utilisateur authentifié (Google ou Discord)
+        String userId = oAuth2User.getAttribute("sub"); // ID Google
+        if (userId == null) {
+            userId = oAuth2User.getAttribute("id"); // ID Discord
+        }
+
+        // Si l'utilisateur n'a pas d'ID, il n'est pas authentifié
+        if (userId == null) {
+            throw new RuntimeException("Utilisateur non authentifié.");
+        }
+
+        // Récupérer la sortie associée au lien d'invitation
+        Outing outing = outingRepository.findByInviteLink(inviteLink)
+                .orElseThrow(() -> new RuntimeException("Lien d'invitation invalide ou expiré."));
+
+        // Récupérer l'utilisateur dans la base de données en utilisant GoogleId ou DiscordId
+        User user = userRepository.findByGoogleIdOrDiscordId(userId)
+                .orElseThrow(() -> new RuntimeException("Utilisateur non trouvé dans la base de données."));
+
+        // Vérifier si l'utilisateur est déjà un participant à la sortie
+        boolean isAlreadyParticipant = outingParticipantRepository.existsByOutingAndUser(outing, user);
+        if (isAlreadyParticipant) {
+            throw new RuntimeException("Utilisateur déjà participant de cette sortie.");
+        }
+
+        // Ajouter l'utilisateur en tant que participant à la sortie
+        outingParticipantRepository.save(new OutingParticipant(outing, user));
+
+        // Retourner la sortie associée
+        return outing;
+    }
+
+
+
 }

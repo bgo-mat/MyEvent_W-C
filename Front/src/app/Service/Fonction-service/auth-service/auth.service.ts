@@ -29,4 +29,9 @@ export class AuthService {
     return this.apiService.put('auth/update-bio', data);
   }
 
+  uploadAvatarBase64(base64Image: string): Observable<any> {
+    return this.apiService.post('auth/upload-avatar', { avatar: base64Image });
+  }
+
+
 }
