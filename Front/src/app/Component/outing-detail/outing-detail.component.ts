@@ -1,12 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { OutlingService } from '../../Service/Fonction-service/outling-service/outling.service';
 import { NgForOf, NgIf } from '@angular/common';
 import { OpenAgendaService } from "../../Service/Fonction-service/open-agenda-service/open-agenda.service";
 import { GoogleMap, MapMarker } from '@angular/google-maps';
 import { AuthService } from "../../Service/Fonction-service/auth-service/auth.service";
 import SockJS from 'sockjs-client';
-import Stomp from 'stompjs';
+import { Client } from '@stomp/stompjs';
 import { FormsModule } from "@angular/forms";
 
 @Component({
@@ -34,9 +34,9 @@ export class OutingDetailComponent implements OnInit {
 
   messages: any[] = [];
   messageContent: string = '';
-  stompClient: any;
+  stompClient: Client | null = null;  // Changer le type de stompClient pour correspondre à la classe Client
   public outingId: any;
-  public uid:any;
+  public uid: any;
   public userName: string = '';
 
   constructor(
@@ -74,19 +74,28 @@ export class OutingDetailComponent implements OnInit {
   }
 
   connectToSocket(outingId: string): void {
-    const socket = new SockJS('http://localhost:8080/ws');
-    this.stompClient = Stomp.over(socket);
+    const socket = new SockJS('http://51.75.162.147:8080/ws');
+    this.stompClient = new Client({
+      webSocketFactory: () => socket,
+      debug: (str) => console.log(str),  // Pour déboguer les connexions
+      reconnectDelay: 5000,
+    });
 
-    this.stompClient.connect({}, (frame: any) => {
-      this.stompClient.subscribe(`/topic/${outingId}`, (message: any) => {
+    this.stompClient.onConnect = (frame) => {
+      this.stompClient?.subscribe(`/topic/${outingId}`, (message) => {
         this.onMessageReceived(JSON.parse(message.body));
       });
 
-      this.stompClient.send(`/app/chat.addUser/${outingId}`, {}, JSON.stringify({
-        sender: this.userName,
-        type: 'JOIN'
-      }));
-    });
+      this.stompClient?.publish({
+        destination: `/app/chat.addUser/${outingId}`,
+        body: JSON.stringify({
+          sender: this.userName,
+          type: 'JOIN'
+        }),
+      });
+    };
+
+    this.stompClient.activate();
   }
 
   onMessageReceived(message: any): void {
@@ -101,12 +110,14 @@ export class OutingDetailComponent implements OnInit {
         outingId: this.outingId,
         type: 'CHAT'
       };
-      this.stompClient.send(`/app/chat.sendMessage/${this.outingId}`, {}, JSON.stringify(message));
+      this.stompClient.publish({
+        destination: `/app/chat.sendMessage/${this.outingId}`,
+        body: JSON.stringify(message),
+      });
       this.messageContent = '';
     }
   }
 
-  // Nouvelle méthode pour récupérer les messages
   getMessages(outingId: string): void {
     this.outingService.getMessagesForOuting(this.outingId).subscribe({
       next: (data) => {
@@ -119,8 +130,6 @@ export class OutingDetailComponent implements OnInit {
       }
     });
   }
-
-
 
   getOutingDetails(outingId: string) {
     this.openAgendaService.getComponentById(outingId).subscribe({
@@ -186,7 +195,7 @@ export class OutingDetailComponent implements OnInit {
     });
   }
 
-  redirectBack(){
-    this.router.navigate(['/event-detail', this.uid])
+  redirectBack() {
+    this.router.navigate(['/event-detail', this.uid]);
   }
 }
