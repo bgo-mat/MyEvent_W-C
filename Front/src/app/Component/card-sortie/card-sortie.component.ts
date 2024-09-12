@@ -14,7 +14,7 @@ import { Client } from '@stomp/stompjs'; // Utiliser @stomp/stompjs
   standalone: true
 })
 export class CardSortieComponent implements OnInit {
-  
+
   @Input() sortie: any;
   public userConnectName: string | undefined;
   public isOrganizer: boolean = false;
@@ -28,6 +28,7 @@ export class CardSortieComponent implements OnInit {
 
   constructor(private router: Router, private outlingService: OutlingService, private authService: AuthService) {}
 
+  
   ngOnInit() {
     this.getCurrentUser();
     this.getAllParticipants();
