@@ -14,6 +14,7 @@ import { Client } from '@stomp/stompjs'; // Utiliser @stomp/stompjs
   standalone: true
 })
 export class CardSortieComponent implements OnInit {
+  
   @Input() sortie: any;
   public userConnectName: string | undefined;
   public isOrganizer: boolean = false;
