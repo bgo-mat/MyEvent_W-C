@@ -7,7 +7,7 @@ import {Observable} from "rxjs";
 })
 export class OutlingService {
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {}
 
   createOutling(data: any): Observable<any> {
     return this.apiService.post('outing/create', data);

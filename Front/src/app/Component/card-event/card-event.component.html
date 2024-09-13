@@ -10,10 +10,11 @@
   </div>
   <div class="p-4 flex flex-col justify-between w-full md:w-full">
     <div class="flex justify-between mt-4 md:mt-0 h-auto md:h-2/6" >
-      <h1 class="text-lg md:text-xl font-bold truncate md:whitespace-normal h-full">
+      <h1 class="text-lg  font-bold truncate md:whitespace-normal h-full md:w-8/12 w-6/12">
         {{ result.title_fr }}
       </h1>
-      <button (click)="redirectEventDetail(result.uid)" class="bg-bluePimp text-white px-3 py-1 h-fit  rounded-lg hover:scale-105 transition-transform focus:bg-blue-500">
+
+      <button (click)="redirectEventDetail(result.uid)" class="min-w-fit bg-bluePimp text-white px-3 py-1 h-fit  rounded-lg hover:scale-105 transition-transform focus:bg-blue-500">
         En savoir +
       </button>
     </div>
@@ -29,7 +30,8 @@
           <p class="text-xs md:text-sm text-justify h-auto overflow-hidden text-ellipsis md:whitespace-normal">{{ result.location_city }}</p>
           }
         </div>
-      
+
+
       <div *ngIf="result.keywords_fr"  class="flex flex-wrap overflow-hidden h-1/6">
         <div *ngFor="let keyword of result.keywords_fr.slice(0, 10)"
              class="flex justify-center items-center m-1 font-medium py-1 px-3 rounded-sm bg-pink text-black ">

@@ -1,39 +1,46 @@
 <div class="flex justify-center h-screen-minus-64 px-8 pb-4">
   <div class="flex w-full md:w-11/12 lg:w-9/12 h-full flex-col">
-    <div class="w-full flex justify-start my-2 ">
-
-      <button (click)="redirectBack()" class="  sm:mt-0 border border-bluePimp text-textPimp px-3 py-1 rounded-lg hover:scale-105 transition-transform focus:scale-100">
+    <div class="w-full flex justify-start my-2">
+      <button (click)="redirectBack()" class="sm:mt-0 border border-bluePimp text-textPimp px-3 py-1 rounded-lg hover:scale-105 transition-transform focus:scale-100">
         Retour
       </button>
-
     </div>
-    <!-- Event Section (en haut) -->
-    <div *ngIf="outing" class="bg-white shadow-md  rounded-lg p-6 mb-6">
-      <h2 class="text-xl font-semibold mb-4  md:text-left">Sortie : {{ outing.title }}</h2>
 
+    <div *ngIf="outing" class="bg-white shadow-md rounded-lg p-6 mb-6">
+      <h2 class="text-xl font-semibold mb-4 md:text-left">Sortie : {{ outing.title }}</h2>
       <div class="map-container flex flex-col gap-6">
         <div class="flex w-full flex-col md:flex-row gap-4 md:gap-0 items-center md:justify-around">
-          <img [src]="outing.image" alt="Image de l'événement"
-               class="w-[300px] h-[300px]  object-cover rounded-lg shadow-md  md:mb-0">
+          <img [src]="outing.image" alt="Image de l'événement" class="w-[300px] h-[300px] object-cover rounded-lg shadow-md md:mb-0">
 
           <google-map class="flex items-center justify-center rounded-lg" [center]="center" [zoom]="zoom" height="300px" width="300px">
             <map-marker [position]="center"></map-marker>
           </google-map>
+
+          <div class="flex flex-col items-center">
+            <p class="text-xl">Metéo</p>
+            <div *ngIf="currentTemperature !== undefined" class="flex items-center">
+              <img *ngIf="weatherIcon" [src]="'assets/' + weatherIcon + '.svg'" alt="Icône météo" class="w-16 h-16">
+              <p class="text-lg font-semibold">{{ currentTemperature }}°C</p>
+            </div>
+          </div>
         </div>
 
-        <!-- Détails de l'événement -->
         <div class="flex flex-col gap-4 p-4 w-full">
           <h3 class="font-bold text-lg text-gray-800">{{ outing.title_fr }}</h3>
           <div class="w-full flex gap-2 items-center">
             <img src="assets/calendar-days-svgrepo-com.svg" class="w-8">
-            <p class="text-sm md:text-base text-justify h-auto overflow-hidden text-ellipsis"> {{ outing.daterange_fr }}</p>
+            <p class="text-sm md:text-base text-justify h-auto overflow-hidden text-ellipsis">{{ outing.daterange_fr }}</p>
           </div>
-          <p class="text-sm md:text-base text-justify overflow-hidden text-ellipsis" [innerHTML]="outing.longdescription_fr"></p>
+          <p class="text-sm md:text-base text-justify overflow-hidden text-ellipsis">
+            <span [innerHTML]="showFullDescription ? outing.longdescription_fr : (outing.longdescription_fr | slice:0:350) + '...'"></span>
+            <a href="javascript:void(0)" (click)="toggleDescription()" class="text-blue-500 hover:text-blue-700">
+              {{ showFullDescription ? 'Voir moins' : 'Voir plus' }}
+            </a>
+          </p>
         </div>
-
       </div>
 
-      <div *ngIf="isOrganizer && visibiliti === 'PRIVATE'" class="mt-4">
+      <div *ngIf="isOrganizer" class="mt-4">
         <button *ngIf="isOrganizer" (click)="generateInviteLink()" class="bg-blue-500 text-white px-4 py-2 rounded-lg">
           Générer un lien d'invitation
         </button>
@@ -41,55 +48,49 @@
         <div *ngIf="inviteLink" class="mt-6 flex flex-col items-start justify-start gap-4">
           <p class="text-gray-700 text-center">
             Lien d'invitation :
-            <a [href]="inviteLink" target="_blank"
-               class="text-blue-500 font-semibold underline hover:text-blue-700 transition duration-300">
+            <a [href]="inviteLink" target="_blank" class="text-blue-500 font-semibold underline hover:text-blue-700 transition duration-300">
               {{ inviteLink }}
             </a>
           </p>
-
-          <button (click)="copyToClipboard(inviteLink)"
-                  class="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300">
+          <button (click)="copyToClipboard(inviteLink)" class="bg-blue-500 text-white font-semibold px-6 py-2 rounded-lg shadow-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50 transition duration-300">
             Copier le lien
           </button>
           <p>{{ copyMessage }}</p>
         </div>
-
       </div>
     </div>
 
-  <div class="flex-1 flex flex-col md:flex-row">
-    <div class="w-full md:w-3/12 lg:w-2/12 bg-gray-800 text-white p-4 overflow-y-auto">
-      <h3 class="text-lg font-semibold mb-4">Participants</h3>
-      <div class="space-y-4">
-        <div *ngFor="let participant of participants" class="participant flex items-center space-x-3">
-          <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="10" cy="10" r="10" fill="green" />
-          </svg>
-          <span>{{ participant.name }}</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="flex-1 bg-white p-4 flex flex-col">
-      <h3 class="text-lg font-semibold mb-4">Chat</h3>
-      <div class="flex-1 bg-gray-100 p-4 rounded-lg overflow-y-auto space-y-4">
-        <div *ngFor="let message of messages" class="message">
-          <!-- Pour les messages de type CHAT -->
-          <div *ngIf="message.type === 'CHAT'" class="message-info flex items-center space-x-2">
-            <span class="font-semibold text-gray-700">{{ message.sender }}:</span>
-            <span class="text-gray-600">{{ message.content }}</span>
-          </div>
-
-          <!-- Pour les messages de type JOIN -->
-          <div *ngIf="message.type === 'JOIN'" class="message-info flex items-center space-x-2">
-            <span class="text-green-600 font-semibold">{{ message.sender }} a rejoint la sortie.</span>
+    <div>
+    <div class="flex-1 flex flex- md:flex-row">
+      <div class="w-full md:w-3/12 lg:w-2/12 bg-gray-800 text-white p-4 overflow-y-auto">
+        <h3 class="text-lg font-semibold mb-4">Participants</h3>
+        <div class="space-y-4">
+          <div *ngFor="let participant of participants" class="participant flex items-center space-x-3">
+            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="10" cy="10" r="10" fill="green" />
+            </svg>
+            <span>{{ participant.name }}</span>
           </div>
         </div>
-
       </div>
-      <div class="mt-4 flex space-x-3">
-        <input [(ngModel)]="messageContent" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Écrivez un message...">
-        <button (click)="sendMessage()" class="bg-blue-500 text-white p-2 rounded-lg">Envoyer</button>
+
+      <div class="flex-1 bg-white p-4 flex flex-col">
+        <h3 class="text-lg font-semibold mb-4">Chat</h3>
+        <div class="flex flex-col w-full bg-gray-100 p-4 rounded-lg overflow-y-scroll h-[40vh] space-y-4" #chatContainer>
+          <div *ngFor="let message of messages" class="message">
+            <div *ngIf="message.type === 'CHAT'" class="message-info flex items-center space-x-2">
+              <span class="font-semibold text-gray-700">{{ message.sender }}:</span>
+              <span class="text-gray-600">{{ message.content }}</span>
+            </div>
+            <div *ngIf="message.type === 'JOIN'" class="message-info flex items-center space-x-2">
+              <span class="text-green-600 font-semibold">{{ message.sender }} a rejoint la sortie.</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-4 flex space-x-3">
+          <input [(ngModel)]="messageContent"  (keydown.enter)="sendMessage()" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Écrivez un message...">
+          <button (click)="sendMessage()" class="bg-blue-500 text-white p-2 rounded-lg">Envoyer</button>
+        </div>
       </div>
     </div>
   </div>

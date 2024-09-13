@@ -10,8 +10,8 @@ describe('CardSortieComponent', () => {
     await TestBed.configureTestingModule({
       imports: [CardSortieComponent]
     })
-    .compileComponents();
-    
+      .compileComponents();
+
     fixture = TestBed.createComponent(CardSortieComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

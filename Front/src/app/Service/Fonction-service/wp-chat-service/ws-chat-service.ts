@@ -19,7 +19,7 @@ export class WsChatService {
     });
 
     this.stompClient.webSocketFactory = () => {
-      return new SockJS('wss://api.myeventwac.fr/ws');
+      return new SockJS('https://api.myeventwac.fr/ws');
     };
   }
 
@@ -38,7 +38,7 @@ export class WsChatService {
   // Envoi d'un message
   sendMessage(outingId: string, message: any) {
     this.stompClient.publish({
-      destination: `/app/chat.sendMessage/${outingId}`, // Route côté serveur
+      destination: `/app/chat.sendMessage/${outingId}`, 
       body: JSON.stringify(message)
     });
   }
