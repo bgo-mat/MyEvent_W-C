@@ -38,7 +38,7 @@ export class WsChatService {
   // Envoi d'un message
   sendMessage(outingId: string, message: any) {
     this.stompClient.publish({
-      destination: `/app/chat.sendMessage/${outingId}`, 
+      destination: `/app/chat.sendMessage/${outingId}`,
       body: JSON.stringify(message)
     });
   }

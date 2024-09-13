@@ -8,5 +8,4 @@ import { Component } from '@angular/core';
   styleUrl: './card-event-skeleton.component.css'
 })
 export class CardEventSkeletonComponent {
-
 }

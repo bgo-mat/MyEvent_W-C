@@ -3,7 +3,7 @@ services:
   backend:
     build:
       context: ./Back/event
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_Back
     ports:
       - "8080:8080"
     depends_on:
@@ -23,6 +23,8 @@ services:
       POSTGRES_PASSWORD: Lavieestbelle!44
     ports:
       - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
     networks:
       - mynetwork
 
@@ -30,7 +32,7 @@ services:
   frontend:
     build:
       context: ./Front
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile_Front
     ports:
       - "4200:80"
     networks:
@@ -39,3 +41,6 @@ services:
 networks:
   mynetwork:
     driver: bridge
+
+volumes:
+  pgdata:
