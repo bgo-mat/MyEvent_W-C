@@ -12,7 +12,6 @@ export class AuthGuard implements CanActivate {
   canActivate(): boolean {
       this.authService.submitGoogle().subscribe(
         data => {
-          console.log('User info:', data);
         }
       );
       return true;

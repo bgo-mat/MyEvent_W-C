@@ -85,7 +85,6 @@ export class OutingDetailComponent implements OnInit {
     const socket = new SockJS('https://api.myeventwac.fr/ws');
     this.stompClient = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => console.log(str),  // Pour déboguer les connexions
       reconnectDelay: 5000,
     });
 
@@ -129,7 +128,6 @@ export class OutingDetailComponent implements OnInit {
   getMessages(outingId: string): void {
     this.outingService.getMessagesForOuting(this.outingId).subscribe({
       next: (data) => {
-        console.log('Données reçues:', data);
         const messages = Array.isArray(data.body) ? data.body : [];
         this.messages = messages.filter((message: any) => message.type === 'CHAT');
       },

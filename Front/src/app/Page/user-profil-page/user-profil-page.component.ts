@@ -45,7 +45,7 @@ export class UserProfilPageComponent implements OnInit {
 
     this.authService.updateBio(data).subscribe(
       data => {
-        console.log(data);
+        this.ngOnInit()
       },
       error => {
         if(error.error.text === "Bio mise à jour avec succès !"){
@@ -102,7 +102,6 @@ export class UserProfilPageComponent implements OnInit {
         this.bio = this.actualUser.bio;
       },
       error => {
-        console.log(error);
         this.router.navigate(['/']);
       }
     );

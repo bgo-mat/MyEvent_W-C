@@ -69,7 +69,6 @@ export class HomePageComponent implements OnInit {
 
     this.openAgendaService.getKeywordList(event.keyword).subscribe(
       data => {
-        console.log(data)
         const keyword = query.toLowerCase();
         const filteredKeywords = new Set();
 

@@ -62,19 +62,15 @@ export class DetailEventComponent implements OnInit {
         this.actualUser = data;
       },
       error=>{
-        console.log(error)
       }
     )
   }
 
   // VOIR REDIRECTION  ET AFFICHAGE ROOM PRIVE POUR TOUT LES MEMBRE
   submitInvitationLink(): void {
-    console.log(this.inviteLink)
     if (this.inviteLink) {
       this.outling.joinOutingByInviteLink(this.inviteLink).subscribe(
          response => {
-
-          console.log(response.body.eventUid)
           alert('Vous avez rejoint la sortie avec succès !')
           this.router.navigate(['/outing', response.body.roomId, response.body.eventUid]);
           },
@@ -91,9 +87,7 @@ export class DetailEventComponent implements OnInit {
   getEventFromEvent() {
     this.outling.getOutlingById(this.eventId).subscribe(
       data => {
-        console.log(data);
         this.outings = data.body || [];
-        console.log(this.outings);
       },
       error => {
         console.error("Erreur lors de la récupération des sorties : ", error);
@@ -125,9 +119,9 @@ export class DetailEventComponent implements OnInit {
         disableClose: true
       });
 
+      this.ngOnInit();
       dialogRef.afterClosed().subscribe(result => {
         if (result === 'submitted') {
-          window.location.reload();
           this.ngOnInit();
 
         }

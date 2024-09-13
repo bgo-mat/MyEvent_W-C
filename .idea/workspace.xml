@@ -6,9 +6,15 @@
   <component name="ChangeListManager">
     <list default="true" id="2e0af264-f3d5-404e-a71c-d42b0df8b76c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/card-sortie/card-sortie.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/card-sortie/card-sortie.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/nav-bar/nav-bar.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/nav-bar/nav-bar.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/organize-outing-form/organize-outing-form.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/organize-outing-form/organize-outing-form.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/app/Component/outing-detail/outing-detail.component.html" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/outing-detail/outing-detail.component.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/app/Component/outing-detail/outing-detail.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/outing-detail/outing-detail.component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/app/Page/detail-event/detail-event.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Page/detail-event/detail-event.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Page/home-page/home-page.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Page/home-page/home-page.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Page/user-profil-page/user-profil-page.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Page/user-profil-page/user-profil-page.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/auth/AuthGuard.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/auth/AuthGuard.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/app/auth/discord-callback/discord-callback-component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/auth/discord-callback/discord-callback-component.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Front/src/app/auth/google-callback/google-callback.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/auth/google-callback/google-callback.component.ts" afterDir="false" />
     </list>
@@ -66,7 +72,7 @@
       <workItem from="1726045840884" duration="850000" />
       <workItem from="1726135540505" duration="5423000" />
       <workItem from="1726146873269" duration="14000" />
-      <workItem from="1726220154087" duration="5585000" />
+      <workItem from="1726220154087" duration="6491000" />
     </task>
     <servers />
   </component>

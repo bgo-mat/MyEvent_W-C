@@ -33,7 +33,6 @@ export class NavBarComponent implements AfterViewInit , OnInit{
       data => {
         this.userInfo = data;
         this.username = data.username;
-        console.log(this.userInfo);
       },
       error => {
         console.error("Erreur lors de la récupération de l'utilisateur", error);
@@ -45,9 +44,10 @@ export class NavBarComponent implements AfterViewInit , OnInit{
   logout() {
     this.authService.logout().subscribe(
       response => {
-        console.log(response.message);
+
         this.results = response;
         this.username = '';
+        this.router.navigate(['/']);
       },
       error => {
         console.error('Erreur lors de la déconnexion', error);

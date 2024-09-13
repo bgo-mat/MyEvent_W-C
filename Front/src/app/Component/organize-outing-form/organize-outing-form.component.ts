@@ -29,10 +29,8 @@ export class OrganizeOutingFormComponent {
 
   onSubmit() {
     if (this.outing.title && this.outing.date && this.outing.eventExternalId) {
-      console.log('Sortie organisée:', this.outing);
       this.outlingService.createOutling(this.outing).subscribe(
         data => {
-          console.log(data);
           this.dialogRef.close('submitted');
         }
       );

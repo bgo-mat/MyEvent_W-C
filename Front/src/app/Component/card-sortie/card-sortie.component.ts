@@ -71,7 +71,6 @@ export class CardSortieComponent implements OnInit {
     const socket = new SockJS('https://api.myeventwac.fr/ws');
     this.stompClient = new Client({
       webSocketFactory: () => socket,
-      debug: (str) => console.log(str), // Pour déboguer les connexions
       reconnectDelay: 5000,
     });
 
@@ -93,7 +92,6 @@ export class CardSortieComponent implements OnInit {
   }
 
   onMessageReceived(message: any) {
-    console.log('Message reçu : ', message);
   }
 
   sendMessageToChannel(outingId: string, content: string) {
