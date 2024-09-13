@@ -1,13 +1,14 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { OutlingService } from '../../Service/Fonction-service/outling-service/outling.service';
-import { NgForOf, NgIf } from '@angular/common';
+import {NgForOf, NgIf, SlicePipe} from '@angular/common';
 import { OpenAgendaService } from "../../Service/Fonction-service/open-agenda-service/open-agenda.service";
 import { GoogleMap, MapMarker } from '@angular/google-maps';
 import { AuthService } from "../../Service/Fonction-service/auth-service/auth.service";
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { FormsModule } from "@angular/forms";
+import {WeatherService} from "../../Service/Fonction-service/weather-api/weather.service";
 
 @Component({
   selector: 'app-outing-detail',
@@ -18,7 +19,8 @@ import { FormsModule } from "@angular/forms";
     NgIf,
     GoogleMap,
     MapMarker,
-    FormsModule
+    FormsModule,
+    SlicePipe
   ],
   styleUrls: ['./outing-detail.component.css']
 })
@@ -38,13 +40,19 @@ export class OutingDetailComponent implements OnInit {
   public outingId: any;
   public uid: any;
   public userName: string = '';
+  currentTemperature: any;
+  currentTime: string | undefined;
+  weatherIcon: string | undefined;
+  showFullDescription: boolean = false;
+  maxLength: number = 200;
 
   constructor(
     private route: ActivatedRoute,
     private outingService: OutlingService,
     private openAgendaService: OpenAgendaService,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
+    private weatherService: WeatherService
   ) {}
 
   ngOnInit(): void {
@@ -149,6 +157,51 @@ export class OutingDetailComponent implements OnInit {
     });
   }
 
+  getWeather(latitude: number, longitude: number) {
+    this.weatherService.getWeatherData(latitude, longitude).subscribe(
+      data => {
+        this.extractCurrentTemperature(data);
+      }
+    );
+  }
+
+  extractCurrentTemperature(weatherData: any): void {
+    const temperatures = weatherData.hourly.temperature_2m;
+    const times = weatherData.hourly.time;
+
+    const now = new Date();
+    let closestTimeIndex = 0;
+    let smallestDifference = Infinity;
+
+    for (let i = 0; i < times.length; i++) {
+      const forecastTime = new Date(times[i]);
+      const timeDifference = Math.abs(now.getTime() - forecastTime.getTime());
+
+      if (timeDifference < smallestDifference) {
+        smallestDifference = timeDifference;
+        closestTimeIndex = i;
+      }
+    }
+
+    this.currentTemperature = temperatures[closestTimeIndex];
+    this.currentTime = times[closestTimeIndex];
+    this.setWeatherIcon(this.currentTemperature);
+  }
+
+  setWeatherIcon(temperature: number): void {
+    if (temperature >= 30) {
+      this.weatherIcon = 'sun';
+    } else if (temperature >= 20 && temperature < 30) {
+      this.weatherIcon = 'cloud-sun';
+    } else if (temperature >= 10 && temperature < 20) {
+      this.weatherIcon = 'cloud';
+    } else if (temperature < 10) {
+      this.weatherIcon = 'cloud-rain';
+    } else {
+      this.weatherIcon = 'default';
+    }
+  }
+
   getParticipants(outingId: string) {
     this.outingService.getParticipantsByOutingId(outingId).subscribe({
       next: data => {
@@ -197,5 +250,9 @@ export class OutingDetailComponent implements OnInit {
 
   redirectBack() {
     this.router.navigate(['/event-detail', this.uid]);
+  }
+
+  toggleDescription(): void {
+    this.showFullDescription = !this.showFullDescription;
   }
 }
