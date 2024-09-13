@@ -6,7 +6,17 @@
   <component name="ChangeListManager">
     <list default="true" id="2e0af264-f3d5-404e-a71c-d42b0df8b76c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/card-event/card-event.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/card-event/card-event.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/CustomAuthenticationSuccessHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/CustomAuthenticationSuccessHandler.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/SecurityConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/SecurityConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/WebConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/WebConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/WebSocketConfig.java" beforeDir="false" afterPath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/config/WebSocketConfig.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/services/UserService.java" beforeDir="false" afterPath="$PROJECT_DIR$/Back/event/src/main/java/com/example/event/event/services/UserService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/card-sortie/card-sortie.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/card-sortie/card-sortie.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/outing-detail/outing-detail.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/outing-detail/outing-detail.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Page/form-log/form-log.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Page/form-log/form-log.component.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Service/API-service/API-backend-service/api-backend.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Service/API-service/API-backend-service/api-backend.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Service/Fonction-service/auth-service/auth.service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Service/Fonction-service/auth-service/auth.service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Service/Fonction-service/wp-chat-service/ws-chat-service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Service/Fonction-service/wp-chat-service/ws-chat-service.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -62,7 +72,7 @@
       <workItem from="1726045840884" duration="850000" />
       <workItem from="1726135540505" duration="5423000" />
       <workItem from="1726146873269" duration="14000" />
-      <workItem from="1726220154087" duration="93000" />
+      <workItem from="1726220154087" duration="880000" />
     </task>
     <servers />
   </component>

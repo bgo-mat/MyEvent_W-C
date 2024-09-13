@@ -19,7 +19,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/ws")  // Point de connexion du WebSocket
-                .setAllowedOrigins("http://51.75.162.147:4200")  // Autorise les requêtes CORS du frontend Angular
+                .setAllowedOrigins("https://myeventwac.fr")  // Autorise les requêtes CORS du frontend Angular
                 .withSockJS();  // Utilisation de SockJS pour fallback
     }
 }

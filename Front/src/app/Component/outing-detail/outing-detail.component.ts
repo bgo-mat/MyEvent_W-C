@@ -74,7 +74,7 @@ export class OutingDetailComponent implements OnInit {
   }
 
   connectToSocket(outingId: string): void {
-    const socket = new SockJS('http://51.75.162.147:8080/ws');
+    const socket = new SockJS('https://api.myeventwac.fr/ws');
     this.stompClient = new Client({
       webSocketFactory: () => socket,
       debug: (str) => console.log(str),  // Pour déboguer les connexions

@@ -32,10 +32,10 @@ export class FormLogComponent implements OnInit{
   }
 
   connexionGoogle(){
-    window.location.href = 'http://51.75.162.147:8080/oauth2/authorization/google';
+    window.location.href = 'https://api.myeventwac.fr/oauth2/authorization/google';
   }
   connexionDiscord() {
-    window.location.href = 'http://51.75.162.147:8080/oauth2/authorization/discord';
+    window.location.href = 'https://api.myeventwac.fr/oauth2/authorization/discord';
   }
 
 }

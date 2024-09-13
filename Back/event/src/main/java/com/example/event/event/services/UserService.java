@@ -31,7 +31,7 @@ public class UserService {
         Files.createDirectories(filePath.getParent());
         Files.write(filePath, imageBytes);
 
-        String avatarUrl = "http://51.75.162.147:8080/avatars/" + fileName;
+        String avatarUrl = "https://api.myeventwac.fr/avatars/" + fileName;
         user.setAvatar(avatarUrl);
         userRepository.save(user);
 
