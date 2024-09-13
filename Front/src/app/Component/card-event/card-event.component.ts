@@ -17,7 +17,6 @@ import {Router} from "@angular/router";
   styleUrl: './card-event.component.css'
 })
 export class CardEventComponent{
-
   constructor(private openAgendaService: OpenAgendaService, private router: Router) {}
 
   @Input() result: any;

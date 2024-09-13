@@ -6,7 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2e0af264-f3d5-404e-a71c-d42b0df8b76c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Front/src/app/Service/Fonction-service/wp-chat-service/ws-chat-service.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Service/Fonction-service/wp-chat-service/ws-chat-service.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Front/src/app/Component/card-event/card-event.component.ts" beforeDir="false" afterPath="$PROJECT_DIR$/Front/src/app/Component/card-event/card-event.component.ts" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -47,8 +47,7 @@
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
-        <option value="bundled-jdk-9f38398b9061-39b83d9b5494-intellij.indexing.shared.core-IU-241.18034.62" />
-        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-IU-241.18034.62" />
+        <option value="bundled-js-predefined-1d06a55b98c1-0b3e54e931b4-JavaScript-WS-241.17890.13" />
       </set>
     </attachedChunks>
   </component>
@@ -63,6 +62,7 @@
       <workItem from="1726045840884" duration="850000" />
       <workItem from="1726135540505" duration="5423000" />
       <workItem from="1726146873269" duration="14000" />
+      <workItem from="1726220154087" duration="93000" />
     </task>
     <servers />
   </component>
