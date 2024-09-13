@@ -127,6 +127,7 @@ export class DetailEventComponent implements OnInit {
 
       dialogRef.afterClosed().subscribe(result => {
         if (result === 'submitted') {
+          window.location.reload();
           this.ngOnInit();
 
         }

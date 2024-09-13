@@ -16,6 +16,7 @@ export class GoogleCallbackComponent implements OnInit {
     this.authService.submitGoogle().subscribe(
       data => {
         console.log('User info:', data);
+        window.location.reload();
         this.router.navigate(["/"]);
       },
       error => {

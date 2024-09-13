@@ -60,39 +60,39 @@
       </div>
     </div>
 
-    <div>
-    <div class="flex-1 flex flex- md:flex-row">
-      <div class="w-full md:w-3/12 lg:w-2/12 bg-gray-800 text-white p-4 overflow-y-auto">
-        <h3 class="text-lg font-semibold mb-4">Participants</h3>
-        <div class="space-y-4">
-          <div *ngFor="let participant of participants" class="participant flex items-center space-x-3">
-            <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="10" cy="10" r="10" fill="green" />
-            </svg>
-            <span>{{ participant.name }}</span>
+    <div class="pb-6">
+      <div class="flex-1 flex-col md:flex-row  ">
+        <div class="w-full md:w-3/12 lg:w-2/12 bg-gray-800 text-white p-4 overflow-y-auto rounded-t-lg">
+          <h3 class="text-lg font-semibold mb-4">Participants</h3>
+          <div class="space-y-4">
+            <div *ngFor="let participant of participants" class="participant flex items-center space-x-3">
+              <svg width="20" height="20" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10" cy="10" r="10" fill="green" />
+              </svg>
+              <span>{{ participant.name }}</span>
+            </div>
           </div>
         </div>
-      </div>
 
-      <div class="flex-1 bg-white p-4 flex flex-col">
-        <h3 class="text-lg font-semibold mb-4">Chat</h3>
-        <div class="flex flex-col w-full bg-gray-100 p-4 rounded-lg overflow-y-scroll h-[40vh] space-y-4" #chatContainer>
-          <div *ngFor="let message of messages" class="message">
-            <div *ngIf="message.type === 'CHAT'" class="message-info flex items-center space-x-2">
-              <span class="font-semibold text-gray-700">{{ message.sender }}:</span>
-              <span class="text-gray-600">{{ message.content }}</span>
-            </div>
-            <div *ngIf="message.type === 'JOIN'" class="message-info flex items-center space-x-2">
-              <span class="text-green-600 font-semibold">{{ message.sender }} a rejoint la sortie.</span>
+        <div class="flex-1 bg-white p-4 flex flex-col rounded-b-lg">
+          <h3 class="text-lg font-semibold mb-4">Chat</h3>
+          <div class="flex flex-col w-full bg-gray-100 p-4 rounded-lg overflow-y-scroll h-[40vh] space-y-4" #chatContainer>
+            <div *ngFor="let message of messages" class="message">
+              <div *ngIf="message.type === 'CHAT'" class="message-info flex items-center space-x-2">
+                <span class="font-semibold text-gray-700">{{ message.sender }}:</span>
+                <span class="text-gray-600">{{ message.content }}</span>
+              </div>
+              <div *ngIf="message.type === 'JOIN'" class="message-info flex items-center space-x-2">
+                <span class="text-green-600 font-semibold">{{ message.sender }} a rejoint la sortie.</span>
+              </div>
             </div>
           </div>
-        </div>
-        <div class="mt-4 flex space-x-3">
-          <input [(ngModel)]="messageContent"  (keydown.enter)="sendMessage()" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Écrivez un message...">
-          <button (click)="sendMessage()" class="bg-blue-500 text-white p-2 rounded-lg">Envoyer</button>
+          <div class="mt-4 flex space-x-3">
+            <input [(ngModel)]="messageContent"  (keydown.enter)="sendMessage()" type="text" class="w-full p-2 border border-gray-300 rounded-lg" placeholder="Écrivez un message...">
+            <button (click)="sendMessage()" class="bg-blue-500 text-white p-2 rounded-lg">Envoyer</button>
+          </div>
         </div>
       </div>
     </div>
   </div>
-</div>
 </div>

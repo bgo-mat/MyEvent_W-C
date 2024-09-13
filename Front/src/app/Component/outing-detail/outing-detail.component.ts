@@ -149,6 +149,7 @@ export class OutingDetailComponent implements OnInit {
             lat: this.outing.location_coordinates.lat,
             lng: this.outing.location_coordinates.lon
           };
+          this.getWeather(this.outing.location_coordinates.lat, this.outing.location_coordinates.lon);
         }
       },
       error: err => {
